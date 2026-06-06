@@ -1,0 +1,14 @@
+{
+  "deepgram": [
+    { "id": "nova-3", "name": "Nova-3" },
+    { "id": "nova-2", "name": "Nova-2" }
+  ],
+  "openAI": [
+    { "id": "gpt-4o-transcribe", "name": "GPT-4o Transcribe" },
+    { "id": "gpt-4o-mini-transcribe", "name": "GPT-4o mini Transcribe" },
+    { "id": "whisper-1", "name": "Whisper" }
+  ],
+  "elevenLabs": [
+    { "id": "scribe_v1", "name": "Scribe v1" }
+  ]
+}

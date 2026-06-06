@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleName</key>
+	<string>VTT</string>
+	<key>CFBundleDisplayName</key>
+	<string>VTT</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.mgorunuch.vtt</string>
+	<key>CFBundleExecutable</key>
+	<string>VTT</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>14.0</string>
+	<!-- Accessory app: no Dock icon, no app menu — the floating bar is the UI. -->
+	<key>LSUIElement</key>
+	<true/>
+	<!-- Required once real audio capture is wired up. -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>VTT needs the microphone to transcribe your speech.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>VTT uses on-device speech recognition to turn your speech into text.</string>
+</dict>
+</plist>

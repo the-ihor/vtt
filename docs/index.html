@@ -1,23 +1,23 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>VTT — On-device voice to text for Mac</title>
-  <meta name="description" content="VTT is a macOS menu-bar dictation app. On-device voice-to-text — your audio never leaves your Mac." />
-  <link rel="canonical" href="https://vtt.the-ihor.com/" />
+  <meta name="description" content="VTT is a macOS menu-bar dictation app. Private on-device voice-to-text, optional cloud engines with your own key, and per-language model choice.">
+  <link rel="canonical" href="https://vtt.the-ihor.com/">
 
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://vtt.the-ihor.com/" />
-  <meta property="og:title" content="VTT — On-device voice to text for Mac" />
-  <meta property="og:description" content="macOS dictation. On-device voice-to-text — your audio never leaves your Mac." />
-  <meta property="og:image" content="https://vtt.the-ihor.com/assets/og.png" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="VTT — On-device voice to text for Mac" />
-  <meta name="twitter:image" content="https://vtt.the-ihor.com/assets/og.png" />
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vtt.the-ihor.com/">
+  <meta property="og:title" content="VTT — On-device voice to text for Mac">
+  <meta property="og:description" content="macOS dictation. Private on-device voice-to-text — start free, go unlimited for $9.99/mo.">
+  <meta property="og:image" content="https://vtt.the-ihor.com/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="VTT — On-device voice to text for Mac">
+  <meta name="twitter:image" content="https://vtt.the-ihor.com/assets/og.png">
 
-  <meta name="theme-color" content="#08090c" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23000'/><g fill='%23fff'><rect x='30' y='42' width='6' height='16' rx='3'/><rect x='42' y='30' width='6' height='40' rx='3'/><rect x='54' y='38' width='6' height='24' rx='3'/><rect x='66' y='34' width='6' height='32' rx='3'/></g></svg>" />
+  <meta name="theme-color" content="#08090c">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Crect%20width='100'%20height='100'%20rx='24'%20fill='%23000'/%3E%3Cg%20fill='%23fff'%3E%3Crect%20x='30'%20y='42'%20width='6'%20height='16'%20rx='3'/%3E%3Crect%20x='42'%20y='30'%20width='6'%20height='40'%20rx='3'/%3E%3Crect%20x='54'%20y='38'%20width='6'%20height='24'%20rx='3'/%3E%3Crect%20x='66'%20y='34'%20width='6'%20height='32'%20rx='3'/%3E%3C/g%3E%3C/svg%3E">
 
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"SoftwareApplication","name":"VTT","applicationCategory":"UtilitiesApplication","operatingSystem":"macOS 14+","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"url":"https://vtt.the-ihor.com/"}
@@ -40,6 +40,8 @@
       -webkit-font-smoothing:antialiased; }
     a { color:var(--accent); }
     .wrap { max-width:var(--maxw); margin:0 auto; padding:0 24px; }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+      overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 
     header.nav { position:sticky; top:0; z-index:20;
       backdrop-filter:saturate(140%) blur(12px);
@@ -89,7 +91,10 @@
     .trust { margin-top:20px; color:var(--muted); font-size:13px; }
     .trust b { color:var(--accent); font-weight:700; }
 
-    section { padding:40px 0; }
+    section { padding:48px 0; }
+    .sec-h { text-align:center; font-size:clamp(24px,4vw,34px); letter-spacing:-0.02em; margin:0 0 8px; }
+    .sec-sub { text-align:center; color:var(--muted); margin:0 auto 28px; max-width:560px; }
+
     .frame { background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
       overflow:hidden; box-shadow:0 30px 80px rgba(0,0,0,.35); }
     .chrome { display:flex; gap:7px; padding:11px 14px; border-bottom:1px solid var(--line); background:var(--panel-2); }
@@ -109,6 +114,21 @@
     .card .ic { font-size:20px; margin-bottom:10px; }
     .card h3 { margin:0 0 4px; font-size:16px; }
     .card p { margin:0; color:var(--muted); font-size:14px; }
+
+    .plans { display:grid; gap:16px; grid-template-columns:1fr 1fr; max-width:720px; margin:0 auto; }
+    @media (max-width:680px){ .plans{ grid-template-columns:1fr; } }
+    .plan { background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:26px; display:flex; flex-direction:column; }
+    .plan.featured { border-color:var(--accent); box-shadow:0 24px 60px rgba(0,0,0,.35); }
+    .plan h3 { margin:0 0 2px; font-size:18px; }
+    .plan .price { font-size:34px; font-weight:800; letter-spacing:-0.02em; margin:8px 0 2px; }
+    .plan .price small { font-size:14px; font-weight:600; color:var(--muted); }
+    .plan .tag { font-size:12px; color:var(--muted); margin-bottom:14px; }
+    .plan ul { list-style:none; margin:0 0 20px; padding:0; display:grid; gap:9px; }
+    .plan li { display:flex; gap:9px; align-items:flex-start; color:var(--muted); font-size:14px; }
+    .plan li b { color:var(--ink); font-weight:600; }
+    .plan .check { color:var(--accent); flex:none; }
+    .plan .btn { margin-top:auto; justify-content:center; }
+    .note { max-width:560px; margin:22px auto 0; text-align:center; color:var(--muted); font-size:13px; }
 
     .shots { display:grid; gap:14px; grid-template-columns:repeat(3,1fr); }
     @media (max-width:760px){ .shots{ grid-template-columns:1fr; } }
@@ -130,10 +150,12 @@
   <header class="nav">
     <div class="wrap nav-inner">
       <a class="brand" href="#" aria-label="VTT home">
-        <span class="dot" aria-hidden="true"><svg viewBox="0 0 100 100"><g fill="#fff"><rect x="30" y="42" width="8" height="16" rx="4"/><rect x="46" y="28" width="8" height="44" rx="4"/><rect x="62" y="38" width="8" height="24" rx="4"/></g></svg></span>
+        <span class="dot" aria-hidden="true"><svg viewBox="0 0 100 100"><g fill="#fff"><rect x="30" y="42" width="8" height="16" rx="4"></rect><rect x="46" y="28" width="8" height="44" rx="4"></rect><rect x="62" y="38" width="8" height="24" rx="4"></rect></g></svg></span>
         VTT
       </a>
       <nav class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
         <a href="https://github.com/the-ihor/vtt">GitHub</a>
         <a class="nav-cta" href="#download">Download</a>
       </nav>
@@ -145,7 +167,7 @@
       <div class="wrap">
         <div class="pill"><span class="bars" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></span> VTT for macOS</div>
         <h1>Voice to <span class="hl">text</span>,<br>on your Mac.</h1>
-        <p class="killer"><b>100% on-device</b> &middot; your audio never leaves your Mac</p>
+        <p class="killer"><b>Private by default</b> &middot; on-device dictation that never leaves your Mac</p>
         <div class="cta-row">
           <a class="btn primary" href="#download">Download for Mac</a>
           <a class="btn appstore" href="#download" aria-label="Mac App Store (coming soon)">
@@ -153,23 +175,17 @@
             <span class="sub"><small>Coming soon to the</small><b>Mac App Store</b></span>
           </a>
         </div>
-        <p class="trust"><b>Free forever</b> &middot; No account &middot; macOS 14+</p>
+        <p class="trust"><b>Start free</b> &middot; No account &middot; macOS 14+</p>
       </div>
     </section>
 
     <section id="demo">
+      <h2 class="sr-only">Demo</h2>
       <div class="wrap">
         <div class="frame">
           <div class="chrome" aria-hidden="true"><i></i><i></i><i></i></div>
-          <!--
-            TODO: swap in the real demo once recorded:
-            <video poster="assets/demo-poster.webp" controls playsinline preload="none"
-                   width="1280" height="800" style="display:block;width:100%;height:auto">
-              <source src="assets/demo.mp4" type="video/mp4" />
-            </video>
-          -->
           <div class="video-slot" role="img" aria-label="Demo video placeholder">
-            <div class="play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+            <div class="play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></div>
             <span class="hint">Demo coming soon</span>
           </div>
         </div>
@@ -178,18 +194,57 @@
 
     <section id="features">
       <div class="wrap">
+        <h2 class="sec-h">Everything you need to dictate</h2>
+        <p class="sec-sub">On-device privacy when you want it, the best cloud engines when you need them.</p>
         <div class="grid">
-          <div class="card"><div class="ic" aria-hidden="true">&#128274;</div><h3>On-device</h3><p>Apple&rsquo;s on-device engines. Nothing leaves your Mac.</p></div>
-          <div class="card"><div class="ic" aria-hidden="true">&#9729;</div><h3>Cloud, optional</h3><p>Deepgram, OpenAI, ElevenLabs &mdash; with your own key.</p></div>
-          <div class="card"><div class="ic" aria-hidden="true">&#9889;</div><h3>In your menu bar</h3><p>Global hotkey, live waveform, auto-insert anywhere.</p></div>
+          <div class="card"><div class="ic" aria-hidden="true">&#128274;</div><h3>On-device &amp; private</h3><p>Apple&rsquo;s on-device engines, including the new macOS&nbsp;26 Speech. Your audio never leaves your Mac.</p></div>
+          <div class="card"><div class="ic" aria-hidden="true">&#9729;</div><h3>Cloud, your choice</h3><p>Deepgram, OpenAI and ElevenLabs with your own key &mdash; and pick the exact model per provider.</p></div>
+          <div class="card"><div class="ic" aria-hidden="true">&#127760;</div><h3>Per-language engines</h3><p>Route each language to the engine that handles it best, automatically or by hand.</p></div>
+          <div class="card"><div class="ic" aria-hidden="true">&#9889;</div><h3>In your menu bar</h3><p>Global hotkey, live waveform, and auto-insert straight into the app you&rsquo;re typing in.</p></div>
+          <div class="card"><div class="ic" aria-hidden="true">&#11015;</div><h3>Downloadable models</h3><p>Pre-fetch on-device language models so dictation starts the instant you press the key.</p></div>
+          <div class="card"><div class="ic" aria-hidden="true">&#128100;</div><h3>No account needed</h3><p>Nothing to sign up for. Install, grant the mic, and start talking.</p></div>
         </div>
+      </div>
+    </section>
+
+    <section id="pricing">
+      <div class="wrap">
+        <h2 class="sec-h">Simple pricing</h2>
+        <p class="sec-sub">Start free and dictate every day. Go Unlimited when you&rsquo;re ready.</p>
+        <div class="plans">
+          <div class="plan">
+            <h3>Free</h3>
+            <div class="price">$0</div>
+            <div class="tag">Dictate every day, on us</div>
+            <ul>
+              <li><span class="check" aria-hidden="true">&#10003;</span> A <b>free daily allowance</b> on every engine</li>
+              <li><span class="check" aria-hidden="true">&#10003;</span> On-device, private dictation</li>
+              <li><span class="check" aria-hidden="true">&#10003;</span> Cloud engines with your own API key</li>
+              <li><span class="check" aria-hidden="true">&#10003;</span> No account, no catch</li>
+            </ul>
+            <a class="btn" href="#download">Download</a>
+          </div>
+          <div class="plan featured">
+            <h3>Unlimited Dictation</h3>
+            <div class="price">$9.99 <small>/ month</small></div>
+            <div class="tag">For everyday drivers</div>
+            <ul>
+              <li><span class="check" aria-hidden="true">&#10003;</span> <b>No daily limit</b> &mdash; dictate as much as you like</li>
+              <li><span class="check" aria-hidden="true">&#10003;</span> Works across every engine</li>
+              <li><span class="check" aria-hidden="true">&#10003;</span> Everything in Free</li>
+              <li><span class="check" aria-hidden="true">&#10003;</span> Cancel anytime</li>
+            </ul>
+            <a class="btn primary" href="#download">Get VTT</a>
+          </div>
+        </div>
+        <p class="note">Modular by design: you only pay for what you use. This plan covers <b>dictation</b> &mdash; future modules are separate, and subscribing never changes what this plan gives you.</p>
       </div>
     </section>
 
     <section id="screenshots">
       <div class="wrap">
+        <h2 class="sr-only">Screenshots</h2>
         <div class="shots">
-          <!-- TODO: replace each .frame/.ph with <img loading="lazy" width="800" height="500" src="assets/shot-N.webp" alt="..."> -->
           <div class="frame"><div class="ph">Floating bar</div></div>
           <div class="frame"><div class="ph">Menu bar</div></div>
           <div class="frame"><div class="ph">Settings</div></div>
@@ -201,14 +256,13 @@
       <div class="wrap final">
         <h2>Get VTT</h2>
         <div class="cta-row">
-          <!-- /releases/latest auto-resolves to the newest release once published -->
           <a class="btn primary" href="https://github.com/the-ihor/vtt/releases/latest">Download latest release</a>
           <a class="btn appstore" href="#download" aria-label="Mac App Store (coming soon)">
             <span aria-hidden="true">&#63743;</span>
             <span class="sub"><small>Coming soon to the</small><b>Mac App Store</b></span>
           </a>
         </div>
-        <p class="trust"><b>Free forever.</b> No account, no catch.</p>
+        <p class="trust"><b>Start free.</b> No account, no catch. macOS 14+</p>
       </div>
     </section>
   </main>

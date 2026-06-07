@@ -3,6 +3,7 @@ import { C, f } from "./theme";
 import { Grain } from "./components/Grain";
 import { WordCard } from "./components/WordCard";
 import { ClipSlot } from "./components/ClipSlot";
+import { BarClip } from "./components/BarClip";
 import { Caption } from "./components/Caption";
 import { Keycap } from "./components/Keycap";
 import { Listening } from "./components/Listening";
@@ -15,7 +16,7 @@ import { Logo } from "./components/Logo";
  * film previews and renders right now.
  */
 const CLIPS: Record<string, string | undefined> = {
-  dictate: undefined, //   "clips/01-dictate.mp4"   press ^Space → speak → text auto-inserts
+  dictate: "clips/01-dictate.mp4", // floating bar, cropped from the recording & centred (see BarClip)
   apps: undefined, //      "clips/02-apps.mp4"      text landing in Mail / VS Code / Messages / browser
   engines: undefined, //   "clips/03-engines.mp4"   provider list; pick an engine, paste your own API key (or stay on-device)
   languages: undefined, // "clips/04-languages.mp4" keyboard flips EN → RU → UK, output follows, no translate
@@ -90,7 +91,7 @@ export const HeroVideo: React.FC = () => {
         <WordCard word="DONE." accent />
       </Scene>
       <Scene from={T.payoff} durationInFrames={T.anyApp - T.payoff}>
-        <ClipSlot src={CLIPS.dictate} label="dictation: ⌃Space → speak → text appears in the app" dim={0.35} />
+        <BarClip src={CLIPS.dictate!} />
         <Caption>you talk &mdash; it types</Caption>
       </Scene>
 

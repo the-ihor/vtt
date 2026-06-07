@@ -121,7 +121,7 @@ export const HeroVideo: React.FC = () => {
         <WordCard word="ANY APP." size={190} />
       </Scene>
       <Scene from={T.appsClip} durationInFrames={T.anyEngine - T.appsClip}>
-        <DocEditor title="Messages" text="On my way — be there in five." typeSpeed={1.1} />
+        <DocEditor title="Messages" text="On my way — be there in five." typeSpeed={1.1} bar />
       </Scene>
       <Scene from={T.anyEngine} durationInFrames={T.enginesClip - T.anyEngine}>
         <WordCard word="ANY ENGINE." size={170} />
@@ -159,6 +159,7 @@ export const HeroVideo: React.FC = () => {
           title="Notes — Edited"
           text="It's not about typing faster. It's about never losing the thought — you just say it, and it's there."
           typeSpeed={0.6}
+          bar
         />
         <Caption top>native to the Mac &mdash; it lives where you do</Caption>
       </Scene>

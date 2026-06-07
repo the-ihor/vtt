@@ -8,6 +8,8 @@ type Props = {
   ink?: boolean;
   sub?: string;
   size?: number;
+  /** optional visual hung below the word (keycap, waveform, …) */
+  children?: React.ReactNode;
 };
 
 /**
@@ -15,7 +17,7 @@ type Props = {
  * below + a slight scale overshoot. No exit animation — sequences cut hard on
  * the beat, which is the whole point of the rhythm.
  */
-export const WordCard: React.FC<Props> = ({ word, accent, ink, sub, size = 210 }) => {
+export const WordCard: React.FC<Props> = ({ word, accent, ink, sub, size = 210, children }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -23,6 +25,7 @@ export const WordCard: React.FC<Props> = ({ word, accent, ink, sub, size = 210 }
   const y = interpolate(enter, [0, 1], [130, 0]);
   const scale = interpolate(enter, [0, 1], [1.12, 1]);
   const op = interpolate(frame, [0, 3], [0, 1], { extrapolateRight: "clamp" });
+  const childOp = interpolate(frame, [6, 16], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   const fg = accent ? C.accent : ink ? C.paper : C.ink;
 
@@ -66,6 +69,9 @@ export const WordCard: React.FC<Props> = ({ word, accent, ink, sub, size = 210 }
         >
           {sub}
         </div>
+      ) : null}
+      {children ? (
+        <div style={{ opacity: childOp, marginTop: 18 }}>{children}</div>
       ) : null}
     </AbsoluteFill>
   );

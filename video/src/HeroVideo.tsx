@@ -3,7 +3,9 @@ import { C, f } from "./theme";
 import { Grain } from "./components/Grain";
 import { WordCard } from "./components/WordCard";
 import { ClipSlot } from "./components/ClipSlot";
-import { LowerCaption } from "./components/LowerCaption";
+import { Caption } from "./components/Caption";
+import { Keycap } from "./components/Keycap";
+import { Listening } from "./components/Listening";
 import { IntroScene } from "./components/IntroScene";
 import { Logo } from "./components/Logo";
 
@@ -75,17 +77,21 @@ export const HeroVideo: React.FC = () => {
         <WordCard word="TALK." accent />
       </Scene>
       <Scene from={T.press} durationInFrames={T.speak - T.press}>
-        <WordCard word="PRESS." />
+        <WordCard word="PRESS." size={170}>
+          <Keycap />
+        </WordCard>
       </Scene>
       <Scene from={T.speak} durationInFrames={T.done - T.speak}>
-        <WordCard word="SPEAK." />
+        <WordCard word="SPEAK." size={170}>
+          <Listening />
+        </WordCard>
       </Scene>
       <Scene from={T.done} durationInFrames={T.payoff - T.done}>
         <WordCard word="DONE." accent />
       </Scene>
       <Scene from={T.payoff} durationInFrames={T.anyApp - T.payoff}>
-        <ClipSlot src={CLIPS.dictate} label="dictation: press ^Space → speak → text inserts" dim={0.35} />
-        <LowerCaption>thought → text. zero friction</LowerCaption>
+        <ClipSlot src={CLIPS.dictate} label="dictation: ⌃Space → speak → text appears in the app" dim={0.35} />
+        <Caption>you talk &mdash; it types</Caption>
       </Scene>
 
       {/* ---- Phrase 2 — breadth: apps + engines ---- */}
@@ -100,7 +106,7 @@ export const HeroVideo: React.FC = () => {
       </Scene>
       <Scene from={T.enginesClip} durationInFrames={T.anyLang - T.enginesClip}>
         <ClipSlot src={CLIPS.engines} label="Apple · Deepgram · OpenAI · ElevenLabs — your key" dim={0.35} />
-        <LowerCaption>free tokens to start</LowerCaption>
+        <Caption>free tokens to start</Caption>
       </Scene>
 
       {/* ---- Phrase 3 — language + offline ---- */}
@@ -109,7 +115,7 @@ export const HeroVideo: React.FC = () => {
       </Scene>
       <Scene from={T.langClip} durationInFrames={T.noSignal - T.langClip}>
         <ClipSlot src={CLIPS.languages} label="keyboard EN → RU → UK, output follows" dim={0.35} />
-        <LowerCaption>no translation. ever.</LowerCaption>
+        <Caption>no translation. ever.</Caption>
       </Scene>
       <Scene from={T.noSignal} durationInFrames={T.noProblem - T.noSignal}>
         <WordCard word="NO SIGNAL?" size={170} ink />
@@ -119,7 +125,7 @@ export const HeroVideo: React.FC = () => {
       </Scene>
       <Scene from={T.offlineClip} durationInFrames={T.flow - T.offlineClip}>
         <ClipSlot src={CLIPS.offline} label="offline → Apple on-device model keeps working" dim={0.4} />
-        <LowerCaption>on-device · private · yours</LowerCaption>
+        <Caption>works fully offline</Caption>
       </Scene>
 
       {/* ---- Phrase 4 — the emotional core ---- */}
@@ -128,7 +134,7 @@ export const HeroVideo: React.FC = () => {
       </Scene>
       <Scene from={T.flowClip} durationInFrames={T.history - T.flowClip}>
         <ClipSlot src={CLIPS.flow} label="natural talking — ideas pour straight into the doc" dim={0.35} />
-        <LowerCaption>native to the Mac. it lives where you do.</LowerCaption>
+        <Caption>native to the Mac &mdash; it lives where you do</Caption>
       </Scene>
 
       {/* ---- Phrase 5 — history + machine-gun recap ---- */}

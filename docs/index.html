@@ -13,7 +13,7 @@
   <title>VTT — Voice to Text Dictation for Mac (On-Device &amp; Private)</title>
   <meta name="description" content="VTT is a native macOS menu-bar dictation app. Private on-device voice-to-text, optional cloud engines (Deepgram, OpenAI, ElevenLabs) with your own key, and per-language model choice. Free, no account.">
   <meta name="author" content="Ihor Herasymovych">
-  <meta name="keywords" content="voice to text Mac, macOS dictation app, on-device speech to text, private dictation, Apple Speech, Deepgram, OpenAI Whisper, ElevenLabs, menu bar dictation, dictation for accents, accent-friendly speech to text, non-native accent dictation, choose dictation language, dictate in any language, no auto-translate dictation, keyboard language dictation">
+  <meta name="keywords" content="voice to text Mac, macOS dictation app, on-device speech to text, private dictation, Apple Speech, Deepgram, OpenAI Whisper, ElevenLabs, menu bar dictation, dictation for accents, accent-friendly speech to text, non-native accent dictation, choose dictation language, dictate in any language, no auto-translate dictation, keyboard language dictation, dictation history, re-paste transcript, never lose transcription">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="canonical" href="https://vtt.the-ihor.com/">
 
@@ -40,7 +40,7 @@
   {"@context":"https://schema.org","@graph":[
     {"@type":"Organization","@id":"https://vtt.the-ihor.com/#org","name":"VTT","url":"https://vtt.the-ihor.com/","founder":{"@type":"Person","name":"Ihor Herasymovych"}},
     {"@type":"WebSite","@id":"https://vtt.the-ihor.com/#website","url":"https://vtt.the-ihor.com/","name":"VTT","publisher":{"@id":"https://vtt.the-ihor.com/#org"},"inLanguage":"en"},
-    {"@type":"SoftwareApplication","name":"VTT","applicationCategory":"UtilitiesApplication","operatingSystem":"macOS 14 or later","url":"https://vtt.the-ihor.com/","description":"Native macOS menu-bar dictation app with private on-device transcription and optional cloud engines via your own API key.","downloadUrl":"https://github.com/the-ihor/vtt/releases/latest","softwareVersion":"1.0","featureList":["On-device transcription","Cloud engines (Deepgram, OpenAI, ElevenLabs)","Per-language model selection","Menu-bar app with global hotkey","Downloadable language models","Accent-friendly cloud engines for non-native and regional accents","Spoken language follows the keyboard layout — no unwanted auto-translation"],"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"publisher":{"@id":"https://vtt.the-ihor.com/#org"}},
+    {"@type":"SoftwareApplication","name":"VTT","applicationCategory":"UtilitiesApplication","operatingSystem":"macOS 14 or later","url":"https://vtt.the-ihor.com/","description":"Native macOS menu-bar dictation app with private on-device transcription and optional cloud engines via your own API key.","downloadUrl":"https://github.com/the-ihor/vtt/releases/latest","softwareVersion":"1.0","featureList":["On-device transcription","Cloud engines (Deepgram, OpenAI, ElevenLabs)","Per-language model selection","Menu-bar app with global hotkey","Downloadable language models","Accent-friendly cloud engines for non-native and regional accents","Spoken language follows the keyboard layout — no unwanted auto-translation","Local dictation history — re-paste any recent transcript"],"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"publisher":{"@id":"https://vtt.the-ihor.com/#org"}},
     {"@type":"FAQPage","mainEntity":[
       {"@type":"Question","name":"Is VTT private? Does my audio leave my Mac?","acceptedAnswer":{"@type":"Answer","text":"By default VTT transcribes on-device using Apple's Speech engine, so your audio never leaves your Mac. There is no account and no analytics. If you enable a cloud engine, audio is sent directly to that provider using your own API key."}},
       {"@type":"Question","name":"Is VTT free?","acceptedAnswer":{"@type":"Answer","text":"Yes. VTT is free to start, with no account required. On-device dictation costs nothing. Cloud engines are pay-as-you-go on your own provider API key, only if you choose to use them."}},
@@ -49,7 +49,8 @@
       {"@type":"Question","name":"Does VTT work offline?","acceptedAnswer":{"@type":"Answer","text":"Yes. On-device dictation works fully offline. An internet connection is only needed for cloud engines or to download additional language models."}},
       {"@type":"Question","name":"How is VTT different from Apple's built-in Dictation?","acceptedAnswer":{"@type":"Answer","text":"VTT keeps the on-device privacy of Apple Dictation but adds engine choice (including large cloud models via your own key), per-language routing, downloadable models, and a real menu-bar workflow with a global hotkey and auto-insert."}},
       {"@type":"Question","name":"Does VTT handle strong accents?","acceptedAnswer":{"@type":"Answer","text":"Yes. If built-in dictation keeps mishearing your accent, switch VTT to a cloud engine like OpenAI Whisper or Deepgram. These models are trained on millions of voices worldwide, so they are far more forgiving of non-native and regional accents. You can set it per language so each routes to the engine that understands you best."}},
-      {"@type":"Question","name":"Can I control which language I dictate in?","acceptedAnswer":{"@type":"Answer","text":"Yes. By default VTT transcribes in whatever language your keyboard is set to, so you choose the spoken language the same way you switch typing — one keystroke, no menus. Speak Russian and you get Russian text; switch the keyboard and you get that language instead. It never silently translates your words into English the way some dictation tools do. You can also pin a fixed language in settings."}}
+      {"@type":"Question","name":"Can I control which language I dictate in?","acceptedAnswer":{"@type":"Answer","text":"Yes. By default VTT transcribes in whatever language your keyboard is set to, so you choose the spoken language the same way you switch typing — one keystroke, no menus. Speak Russian and you get Russian text; switch the keyboard and you get that language instead. It never silently translates your words into English the way some dictation tools do. You can also pin a fixed language in settings."}},
+      {"@type":"Question","name":"What happens to my transcripts — can I get one back?","acceptedAnswer":{"@type":"Answer","text":"Yes. Every dictation is saved to a local history on your Mac, newest first, so a transcript is never lost to a misclick or a wrong window. Re-paste any recent one from the History tab, or paste the latest straight from the menu bar. The history stays on your device — nothing is uploaded — and you can clear it whenever you like."}}
     ]}
   ]}
   </script>
@@ -312,8 +313,8 @@
 
       <div class="ticker" aria-hidden="true">
         <div class="ticker-track">
-          <span>Private on-device</span><span class="sep">✳</span><span>Deepgram</span><span class="sep">✳</span><span>OpenAI</span><span class="sep">✳</span><span>ElevenLabs</span><span class="sep">✳</span><span>Per-language</span><span class="sep">✳</span><span>Accent-friendly</span><span class="sep">✳</span><span>You pick the language</span><span class="sep">✳</span><span>Menu-bar native</span><span class="sep">✳</span>
-          <span>Private on-device</span><span class="sep">✳</span><span>Deepgram</span><span class="sep">✳</span><span>OpenAI</span><span class="sep">✳</span><span>ElevenLabs</span><span class="sep">✳</span><span>Per-language</span><span class="sep">✳</span><span>Accent-friendly</span><span class="sep">✳</span><span>You pick the language</span><span class="sep">✳</span><span>Menu-bar native</span><span class="sep">✳</span>
+          <span>Private on-device</span><span class="sep">✳</span><span>Deepgram</span><span class="sep">✳</span><span>OpenAI</span><span class="sep">✳</span><span>ElevenLabs</span><span class="sep">✳</span><span>Per-language</span><span class="sep">✳</span><span>Accent-friendly</span><span class="sep">✳</span><span>You pick the language</span><span class="sep">✳</span><span>Never lose a transcript</span><span class="sep">✳</span><span>Menu-bar native</span><span class="sep">✳</span>
+          <span>Private on-device</span><span class="sep">✳</span><span>Deepgram</span><span class="sep">✳</span><span>OpenAI</span><span class="sep">✳</span><span>ElevenLabs</span><span class="sep">✳</span><span>Per-language</span><span class="sep">✳</span><span>Accent-friendly</span><span class="sep">✳</span><span>You pick the language</span><span class="sep">✳</span><span>Never lose a transcript</span><span class="sep">✳</span><span>Menu-bar native</span><span class="sep">✳</span>
         </div>
       </div>
     </section>
@@ -323,7 +324,7 @@
       <div class="wrap">
         <div class="sec-top">
           <h2 class="sec-h display reveal">Looks like <span class="ac">Apple</span><br>made it.</h2>
-          <span class="label reveal" style="--d:.1s">(Features 01—08)</span>
+          <span class="label reveal" style="--d:.1s">(Features 01—09)</span>
         </div>
         <p class="reveal" style="--d:.16s; color:var(--ink-soft); font-size:clamp(17px,1.9vw,21px); max-width:36ch; margin:22px 0 0; line-height:1.45;">Only the Mac — never a cross-platform port. Built in Swift &amp; AppKit to feel like it shipped with the system.</p>
 
@@ -407,13 +408,24 @@
 
           <article class="feature reveal">
             <div class="f-media">
-              <div class="ph"><!-- <img src="assets/feature-08.png" alt="Keyboard picks the spoken language"> -->
-                <div class="ph-in"><div class="ph-tag">Image · 08</div><div class="ph-note">Keyboard layout &rarr; spoken language</div></div></div>
+              <div class="ph"><img src="assets/feature-08.png" alt="VTT language setting following the current keyboard input source" style="object-fit:contain;background:var(--card-2)"></div>
             </div>
             <div class="f-copy">
               <span class="num">08</span>
               <h3>You pick the language</h3>
               <p>VTT follows your keyboard. Flip your input source to Russian and you get Russian back; flip to English and you get English &mdash; with a keystroke you already use. No menu-diving, and no engine quietly translating what you said into a language you never asked for.</p>
+            </div>
+          </article>
+
+          <article class="feature reveal">
+            <div class="f-media">
+              <div class="ph"><!-- <img src="assets/feature-09.png" alt="Dictation history"> -->
+                <div class="ph-in"><div class="ph-tag">Image · 09</div><div class="ph-note">History &mdash; re-paste any transcript</div></div></div>
+            </div>
+            <div class="f-copy">
+              <span class="num">09</span>
+              <h3>Never lose a transcript</h3>
+              <p>Every dictation lands in a local history, newest first. Close the app, paste into the wrong window, change your mind &mdash; it&rsquo;s still there. Re-paste any recent transcript with a click, or grab the latest straight from the menu bar. Kept on your Mac, nowhere else.</p>
             </div>
           </article>
         </div>
@@ -489,6 +501,10 @@
           <details>
             <summary>Can I control which language I dictate in?</summary>
             <div class="a">Completely. By default VTT transcribes in whatever language your keyboard is set to, so you choose the spoken language the same way you switch typing &mdash; one keystroke, no menus. Speak Russian and you get Russian text; switch the keyboard and you get that language instead. It never silently translates your words into English (or any other language) the way some dictation tools do. You can also pin a fixed language in settings if you prefer.</div>
+          </details>
+          <details>
+            <summary>What happens to my transcripts &mdash; can I get one back?</summary>
+            <div class="a">Yes. Every dictation is saved to a local history on your Mac, newest first, so a transcript is never lost to a misclick or a wrong window. Re-paste any recent one from the History tab, or paste the latest straight from the menu bar. The history stays on your device &mdash; nothing is uploaded &mdash; and you can clear it whenever you like.</div>
           </details>
         </div>
       </div>

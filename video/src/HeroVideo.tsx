@@ -1,29 +1,17 @@
-import { AbsoluteFill, Audio, Sequence, staticFile } from "remotion";
+import { AbsoluteFill, Audio, Sequence, staticFile, useCurrentFrame } from "remotion";
 import { C, f } from "./theme";
 import { Grain } from "./components/Grain";
 import { WordCard } from "./components/WordCard";
-import { ClipSlot } from "./components/ClipSlot";
-import { BarClip } from "./components/BarClip";
 import { Caption } from "./components/Caption";
 import { Keycap } from "./components/Keycap";
 import { Listening } from "./components/Listening";
 import { IntroScene } from "./components/IntroScene";
 import { Logo } from "./components/Logo";
-
-/**
- * 👉 Drop your screen-recordings in public/clips/ and fill in the paths below.
- * Until a path is set, that beat shows a labelled placeholder, so the whole
- * film previews and renders right now.
- */
-const CLIPS: Record<string, string | undefined> = {
-  dictate: "clips/01-dictate.mp4", // floating bar, cropped from the recording & centred (see BarClip)
-  apps: undefined, //      "clips/02-apps.mp4"      text landing in Mail / VS Code / Messages / browser
-  engines: undefined, //   "clips/03-engines.mp4"   provider list; pick an engine, paste your own API key (or stay on-device)
-  languages: undefined, // "clips/04-languages.mp4" keyboard flips EN → RU → UK, output follows, no translate
-  offline: undefined, //   "clips/05-offline.mp4"   Wi-Fi off → switch to Apple on-device model, still works
-  flow: undefined, //      "clips/06-flow.mp4"       natural talking, ideas pouring into a doc
-  history: undefined, //   "clips/07-history.mp4"    History tab scrolling, Copy buttons
-};
+import { MacWindow } from "./ui/SettingsWindow";
+import { SettingsGeneral } from "./ui/SettingsGeneral";
+import { DictationBar } from "./ui/DictationBar";
+import { DocEditor } from "./ui/DocEditor";
+import { HistoryContent } from "./ui/HistoryContent";
 
 // Beat grid (123.7 BPM, first downbeat ≈ 0.95s). All cuts land on a beat.
 const T = {
@@ -63,6 +51,39 @@ const Scene: React.FC<{ from: number; durationInFrames: number; children: React.
   </Sequence>
 );
 
+/** Centres a recreated UI window on the paper backdrop. */
+const Stage: React.FC<{ children: React.ReactNode; scale?: number }> = ({ children, scale = 1 }) => (
+  <AbsoluteFill style={{ background: C.paper, alignItems: "center", justifyContent: "center" }}>
+    <div style={{ transform: `scale(${scale})` }}>{children}</div>
+  </AbsoluteFill>
+);
+
+/** Engines beat: the Russian row flips to a cloud engine, highlighted. */
+const EnginesDemo: React.FC = () => {
+  const frame = useCurrentFrame();
+  const russian = frame > 26 ? "OpenAI" : "Default (Apple Speech)";
+  return (
+    <Stage scale={0.9}>
+      <MacWindow active="General">
+        <SettingsGeneral hot="russian" perLang={{ english: "Default (Apple Speech)", russian, ukrainian: "Deepgram" }} />
+      </MacWindow>
+    </Stage>
+  );
+};
+
+/** Language beat: the keyboard badge cycles EN → RU → UK. */
+const LanguagesDemo: React.FC = () => {
+  const frame = useCurrentFrame();
+  const badge = ["EN", "RU", "UK"][Math.min(2, Math.floor(frame / 26))];
+  return (
+    <Stage scale={0.9}>
+      <MacWindow active="General">
+        <SettingsGeneral hot="language" keyboardBadge={badge} />
+      </MacWindow>
+    </Stage>
+  );
+};
+
 export const HeroVideo: React.FC = () => {
   return (
     <AbsoluteFill style={{ background: C.paper }}>
@@ -91,7 +112,7 @@ export const HeroVideo: React.FC = () => {
         <WordCard word="DONE." accent />
       </Scene>
       <Scene from={T.payoff} durationInFrames={T.anyApp - T.payoff}>
-        <BarClip src={CLIPS.dictate!} />
+        <DictationBar text="Hello, guys. Happy to see you." />
         <Caption>you talk &mdash; it types</Caption>
       </Scene>
 
@@ -100,14 +121,14 @@ export const HeroVideo: React.FC = () => {
         <WordCard word="ANY APP." size={190} />
       </Scene>
       <Scene from={T.appsClip} durationInFrames={T.anyEngine - T.appsClip}>
-        <ClipSlot src={CLIPS.apps} label="text landing in Mail · VS Code · Messages · browser" dim={0.3} />
+        <DocEditor title="Messages" text="On my way — be there in five." typeSpeed={1.1} />
       </Scene>
       <Scene from={T.anyEngine} durationInFrames={T.enginesClip - T.anyEngine}>
         <WordCard word="ANY ENGINE." size={170} />
       </Scene>
       <Scene from={T.enginesClip} durationInFrames={T.anyLang - T.enginesClip}>
-        <ClipSlot src={CLIPS.engines} label="Apple · Deepgram · OpenAI · ElevenLabs — your key" dim={0.35} />
-        <Caption>your key &mdash; or fully local</Caption>
+        <EnginesDemo />
+        <Caption top>your key &mdash; or fully local</Caption>
       </Scene>
 
       {/* ---- Phrase 3 — language + offline ---- */}
@@ -115,8 +136,8 @@ export const HeroVideo: React.FC = () => {
         <WordCard word="ANY LANGUAGE." size={150} />
       </Scene>
       <Scene from={T.langClip} durationInFrames={T.noSignal - T.langClip}>
-        <ClipSlot src={CLIPS.languages} label="keyboard EN → RU → UK, output follows" dim={0.35} />
-        <Caption>no translation. ever.</Caption>
+        <LanguagesDemo />
+        <Caption top>no translation. ever.</Caption>
       </Scene>
       <Scene from={T.noSignal} durationInFrames={T.noProblem - T.noSignal}>
         <WordCard word="NO SIGNAL?" size={170} ink />
@@ -125,8 +146,8 @@ export const HeroVideo: React.FC = () => {
         <WordCard word="NO PROBLEM." accent size={170} ink />
       </Scene>
       <Scene from={T.offlineClip} durationInFrames={T.flow - T.offlineClip}>
-        <ClipSlot src={CLIPS.offline} label="offline → Apple on-device model keeps working" dim={0.4} />
-        <Caption>works fully offline</Caption>
+        <DictationBar text="Still works. No internet needed." offline />
+        <Caption top>works fully offline</Caption>
       </Scene>
 
       {/* ---- Phrase 4 — the emotional core ---- */}
@@ -134,8 +155,12 @@ export const HeroVideo: React.FC = () => {
         <WordCard word="FLOW." accent size={260} />
       </Scene>
       <Scene from={T.flowClip} durationInFrames={T.history - T.flowClip}>
-        <ClipSlot src={CLIPS.flow} label="natural talking — ideas pour straight into the doc" dim={0.35} />
-        <Caption>native to the Mac &mdash; it lives where you do</Caption>
+        <DocEditor
+          title="Notes — Edited"
+          text="It's not about typing faster. It's about never losing the thought — you just say it, and it's there."
+          typeSpeed={0.6}
+        />
+        <Caption top>native to the Mac &mdash; it lives where you do</Caption>
       </Scene>
 
       {/* ---- Phrase 5 — history + machine-gun recap ---- */}
@@ -143,7 +168,11 @@ export const HeroVideo: React.FC = () => {
         <WordCard word="NEVER LOSE A WORD." size={120} />
       </Scene>
       <Scene from={T.historyClip} durationInFrames={T.mgPrivate - T.historyClip}>
-        <ClipSlot src={CLIPS.history} label="local history — re-paste any transcript" dim={0.3} />
+        <Stage scale={0.9}>
+          <MacWindow active="History">
+            <HistoryContent />
+          </MacWindow>
+        </Stage>
       </Scene>
       <Scene from={T.mgPrivate} durationInFrames={T.mgInstant - T.mgPrivate}>
         <WordCard word="PRIVATE." size={170} />

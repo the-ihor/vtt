@@ -6,12 +6,12 @@ import { C, fontFamily } from "../theme";
  * and it stays in the same focal zone as the action instead of forcing a glance
  * to the bottom of the frame.
  */
-export const Caption: React.FC<{ children: React.ReactNode; accent?: boolean }> = ({ children, accent }) => {
+export const Caption: React.FC<{ children: React.ReactNode; accent?: boolean; top?: boolean }> = ({ children, accent, top }) => {
   const frame = useCurrentFrame();
   const op = interpolate(frame, [0, 8], [0, 1], { extrapolateRight: "clamp" });
   const y = interpolate(frame, [0, 12], [16, 0], { extrapolateRight: "clamp" });
   return (
-    <AbsoluteFill style={{ alignItems: "center", justifyContent: "flex-start", paddingTop: 388 }}>
+    <AbsoluteFill style={{ alignItems: "center", justifyContent: "flex-start", paddingTop: top ? 54 : 388 }}>
       <div
         style={{
           transform: `translateY(${y}px)`,

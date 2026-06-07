@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>On-Device vs Cloud Dictation: Which Is More Private (and Accurate)? — VTT Blog</title>
+  <meta name="description" content="Where your voice goes with on-device vs cloud speech-to-text on a Mac, what each is good at, and how to get the best of both without leaking audio.">
+  <link rel="canonical" href="https://vtt.the-ihor.com/blog/on-device-vs-cloud-dictation.html">
+  <meta name="author" content="Ihor Herasymovych">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VTT">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://vtt.the-ihor.com/blog/on-device-vs-cloud-dictation.html">
+  <meta property="og:title" content="On-Device vs Cloud Dictation: Which Is More Private (and Accurate)?">
+  <meta property="og:description" content="Where your voice goes, what each approach is good at, and how to get the best of both.">
+  <meta property="og:image" content="https://vtt.the-ihor.com/assets/og.png">
+  <meta property="article:published_time" content="2026-06-07">
+  <meta property="article:author" content="Ihor Herasymovych">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="On-Device vs Cloud Dictation on Mac">
+  <meta name="twitter:image" content="https://vtt.the-ihor.com/assets/og.png">
+  <meta name="theme-color" content="#e9e6dd">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Crect%20width='100'%20height='100'%20rx='22'%20fill='%23121110'/%3E%3Cg%20fill='%23f23a1d'%3E%3Crect%20x='30'%20y='42'%20width='6'%20height='16'%20rx='3'/%3E%3Crect%20x='42'%20y='30'%20width='6'%20height='40'%20rx='3'/%3E%3Crect%20x='54'%20y='38'%20width='6'%20height='24'%20rx='3'/%3E%3Crect%20x='66'%20y='34'%20width='6'%20height='32'%20rx='3'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../legal.css">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://vtt.the-ihor.com/blog/on-device-vs-cloud-dictation.html"},"headline":"On-Device vs Cloud Dictation: Which Is More Private (and Accurate)?","description":"Where your voice goes with on-device vs cloud speech-to-text on a Mac.","image":"https://vtt.the-ihor.com/assets/og.png","datePublished":"2026-06-07","dateModified":"2026-06-07","author":{"@type":"Person","name":"Ihor Herasymovych"},"publisher":{"@type":"Organization","name":"VTT","url":"https://vtt.the-ihor.com/"}}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Home","item":"https://vtt.the-ihor.com/"},
+    {"@type":"ListItem","position":2,"name":"Blog","item":"https://vtt.the-ihor.com/blog/"},
+    {"@type":"ListItem","position":3,"name":"On-device vs cloud dictation","item":"https://vtt.the-ihor.com/blog/on-device-vs-cloud-dictation.html"}
+  ]}
+  </script>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="../index.html"><span class="equ" aria-hidden="true"><i></i><i></i><i></i><i></i></span> VTT<sup>®</sup></a>
+      <nav class="nav-links">
+        <a class="lnk" href="../index.html#features">Features</a>
+        <a class="lnk" href="../blog/">Blog</a>
+        <a class="lnk" href="../support.html">Support</a>
+        <a class="btn" href="../index.html#download">Download</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <div class="page-head">
+        <span class="label">Privacy · Dictation</span>
+        <h1>On-device vs cloud dictation: which is more private (and accurate)?</h1>
+        <div class="article-meta">
+          <span>By Ihor Herasymovych</span><span class="dot"></span>
+          <span>June 7, 2026</span><span class="dot"></span>
+          <span>7 min read</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <article class="doc">
+        <p class="lead-p">When you dictate, your voice has to be turned into text <em>somewhere</em>. That &ldquo;somewhere&rdquo; — your own Mac, or a company&rsquo;s servers — is the difference between on-device and cloud dictation, and it shapes everything from privacy to cost to how the tool feels.</p>
+
+        <h2><span class="n">01</span>Where your voice actually goes</h2>
+        <p><strong>On-device:</strong> a speech model stored on your Mac processes the audio locally. Nothing is uploaded. The microphone stream becomes text on the same machine and is gone the moment it&rsquo;s transcribed.</p>
+        <p><strong>Cloud:</strong> the audio is streamed over the internet to a provider (Deepgram, OpenAI, ElevenLabs, and others), a large model transcribes it, and the text comes back. The connection is encrypted in transit, but the audio does leave your device and is processed on someone else&rsquo;s infrastructure under their policies.</p>
+
+        <h2><span class="n">02</span>Privacy: no contest, with nuance</h2>
+        <p>For raw privacy, on-device wins decisively: data that never leaves your Mac can&rsquo;t be logged, retained, subpoenaed, or breached on a server. There&rsquo;s no &ldquo;do they train on my audio?&rdquo; question because there&rsquo;s no upload.</p>
+        <p>Cloud isn&rsquo;t automatically reckless — reputable providers offer encryption, retention controls, and zero-retention modes — but you&rsquo;re trusting a third party and their configuration. If you handle confidential, medical, legal, or NDA-bound material, on-device removes an entire category of risk rather than mitigating it.</p>
+
+        <h2><span class="n">03</span>Accuracy: closer than you&rsquo;d think</h2>
+        <p>Cloud models are large and frequently updated, so on the hardest inputs — heavy accents, noisy rooms, specialized jargon — they often still lead. But the gap has narrowed sharply. Apple&rsquo;s on-device models, including the upgraded macOS&nbsp;26 Speech, handle everyday dictation cleanly, and for clear speech in a quiet room you may not notice a difference at all.</p>
+        <p>A useful rule: judge accuracy on <em>your</em> voice and vocabulary, not benchmarks. Punctuation, capitalization, and proper-noun handling affect editing time more than a fraction of a percent of word-error rate.</p>
+
+        <h2><span class="n">04</span>Latency, cost, and offline use</h2>
+        <ul>
+          <li><strong>Latency:</strong> on-device avoids a network round trip, so it can feel instant; cloud depends on your connection.</li>
+          <li><strong>Cost:</strong> on-device is free to run. Cloud is usually pay-per-minute (often through your own API key), which is fine occasionally and adds up if you dictate all day.</li>
+          <li><strong>Offline:</strong> on-device works on a plane, a train, or a bad hotel Wi-Fi. Cloud simply doesn&rsquo;t.</li>
+        </ul>
+
+        <h2><span class="n">05</span>You don&rsquo;t have to choose forever</h2>
+        <p>The smartest setup uses on-device as the private, zero-cost default and keeps a cloud engine in reserve for the few recordings that genuinely need a bigger model. Better still is choosing <em>per language</em>: let an on-device engine handle the language it&rsquo;s great at, and route a trickier language to the cloud provider that does it best.</p>
+
+        <div class="cta-box">
+          <h3>Have both, on your terms</h3>
+          <p>VTT defaults to on-device and private. Add Deepgram, OpenAI, or ElevenLabs with your own key only when you want it — and pick the engine per language.</p>
+          <a class="btn" href="../index.html#download">Download VTT</a>
+        </div>
+
+        <h2><span class="n">06</span>A simple decision guide</h2>
+        <ul>
+          <li>Sensitive content, or you just prefer not to upload your voice → <strong>on-device</strong>.</li>
+          <li>Maximum accuracy on a hard recording, and the content isn&rsquo;t sensitive → <strong>cloud</strong>, ideally with a zero-retention setting and your own key.</li>
+          <li>Both, depending on the moment → a tool that lets you switch (or auto-route by language) without re-recording.</li>
+        </ul>
+
+        <div class="related">
+          <span class="label">Keep reading</span>
+          <a href="best-voice-to-text-for-mac-2026.html"><span>The best voice-to-text apps for Mac in 2026 →</span></a>
+          <a href="how-to-dictate-anywhere-on-mac.html"><span>How to dictate text anywhere on your Mac (2026 guide) →</span></a>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap foot-bottom">
+      <span>© 2026 Ihor Herasymovych · Independent app, not affiliated with Apple Inc.</span>
+      <nav>
+        <a href="../index.html">Home</a>
+        <a href="../blog/">Blog</a>
+        <a href="../privacy.html">Privacy</a>
+        <a href="../terms.html">Terms</a>
+        <a href="../support.html">Support</a>
+        <a href="https://github.com/the-ihor/vtt">GitHub</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

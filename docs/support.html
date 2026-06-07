@@ -6,8 +6,28 @@
   <title>Support — VTT</title>
   <meta name="description" content="Get help with VTT, the native macOS dictation app: contact, FAQ, system requirements, and troubleshooting.">
   <link rel="canonical" href="https://vtt.the-ihor.com/support.html">
+  <meta name="author" content="Ihor Herasymovych">
   <meta name="robots" content="index,follow">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="VTT">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://vtt.the-ihor.com/support.html">
+  <meta property="og:title" content="Support &amp; Help — VTT">
+  <meta property="og:description" content="Get help with VTT: contact, system requirements, and a troubleshooting FAQ for the macOS dictation app.">
+  <meta property="og:image" content="https://vtt.the-ihor.com/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Support &amp; Help — VTT">
+  <meta name="twitter:image" content="https://vtt.the-ihor.com/assets/og.png">
   <meta name="theme-color" content="#e9e6dd">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+    {"@type":"Question","name":"Does my audio leave my Mac?","acceptedAnswer":{"@type":"Answer","text":"Not with on-device engines — everything stays local. If you enable a cloud engine, audio is sent directly to that provider using your own API key."}},
+    {"@type":"Question","name":"Which build do I download — Apple Silicon or Intel?","acceptedAnswer":{"@type":"Answer","text":"The website tries to detect and recommend the right one. To check manually, open the Apple menu and choose About This Mac: a Chip entry starting with Apple (M1/M2/M3) means Apple Silicon; a Processor entry mentioning Intel means Intel."}},
+    {"@type":"Question","name":"macOS says the app cannot be opened or is from an unidentified developer.","acceptedAnswer":{"@type":"Answer","text":"For builds downloaded outside the App Store, right-click the app and choose Open, then confirm. If macOS still blocks it, open System Settings, Privacy & Security, and click Open Anyway."}},
+    {"@type":"Question","name":"Dictation isn't inserting text into my app.","acceptedAnswer":{"@type":"Answer","text":"VTT needs microphone and accessibility permissions. In System Settings, Privacy & Security, enable VTT under Microphone and Accessibility, then restart VTT."}},
+    {"@type":"Question","name":"How do I remove VTT and its data?","acceptedAnswer":{"@type":"Answer","text":"Quit VTT and move the app to the Trash. You can remove your API keys in the app beforehand and revoke its permissions in System Settings, Privacy & Security."}}
+  ]}
+  </script>
   <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Crect%20width='100'%20height='100'%20rx='22'%20fill='%23121110'/%3E%3Cg%20fill='%23f23a1d'%3E%3Crect%20x='30'%20y='42'%20width='6'%20height='16'%20rx='3'/%3E%3Crect%20x='42'%20y='30'%20width='6'%20height='40'%20rx='3'/%3E%3Crect%20x='54'%20y='38'%20width='6'%20height='24'%20rx='3'/%3E%3Crect%20x='66'%20y='34'%20width='6'%20height='32'%20rx='3'/%3E%3C/g%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -93,6 +113,7 @@
       <span>© 2026 Ihor Herasymovych · Independent app, not affiliated with Apple Inc.</span>
       <nav>
         <a href="index.html">Home</a>
+        <a href="blog/">Blog</a>
         <a href="privacy.html">Privacy</a>
         <a href="terms.html">Terms</a>
         <a href="support.html">Support</a>

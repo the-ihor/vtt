@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deepgram vs OpenAI vs ElevenLabs vs Apple: Best Speech-to-Text Engine? — VTT Blog</title>
+  <meta name="description" content="A 2026 comparison of the main speech-to-text engines for Mac dictation — Apple on-device, Deepgram, OpenAI, and ElevenLabs — on privacy, accuracy, latency, languages, and cost.">
+  <link rel="canonical" href="https://vtt.the-ihor.com/blog/deepgram-vs-openai-vs-elevenlabs-vs-apple.html">
+  <meta name="author" content="Ihor Herasymovych">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VTT">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://vtt.the-ihor.com/blog/deepgram-vs-openai-vs-elevenlabs-vs-apple.html">
+  <meta property="og:title" content="Deepgram vs OpenAI vs ElevenLabs vs Apple: Which Speech-to-Text Engine Is Best?">
+  <meta property="og:description" content="A 2026 comparison of the main speech-to-text engines for Mac dictation on privacy, accuracy, latency, languages, and cost.">
+  <meta property="og:image" content="https://vtt.the-ihor.com/assets/og.png">
+  <meta property="article:published_time" content="2026-06-07">
+  <meta property="article:author" content="Ihor Herasymovych">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Deepgram vs OpenAI vs ElevenLabs vs Apple">
+  <meta name="twitter:image" content="https://vtt.the-ihor.com/assets/og.png">
+  <meta name="theme-color" content="#e9e6dd">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Crect%20width='100'%20height='100'%20rx='22'%20fill='%23121110'/%3E%3Cg%20fill='%23f23a1d'%3E%3Crect%20x='30'%20y='42'%20width='6'%20height='16'%20rx='3'/%3E%3Crect%20x='42'%20y='30'%20width='6'%20height='40'%20rx='3'/%3E%3Crect%20x='54'%20y='38'%20width='6'%20height='24'%20rx='3'/%3E%3Crect%20x='66'%20y='34'%20width='6'%20height='32'%20rx='3'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../legal.css">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"https://vtt.the-ihor.com/blog/deepgram-vs-openai-vs-elevenlabs-vs-apple.html"},"headline":"Deepgram vs OpenAI vs ElevenLabs vs Apple: Which Speech-to-Text Engine Is Best?","description":"A 2026 comparison of the main speech-to-text engines for Mac dictation.","image":"https://vtt.the-ihor.com/assets/og.png","datePublished":"2026-06-07","dateModified":"2026-06-07","author":{"@type":"Person","name":"Ihor Herasymovych"},"publisher":{"@type":"Organization","name":"VTT","url":"https://vtt.the-ihor.com/"}}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Home","item":"https://vtt.the-ihor.com/"},
+    {"@type":"ListItem","position":2,"name":"Blog","item":"https://vtt.the-ihor.com/blog/"},
+    {"@type":"ListItem","position":3,"name":"Deepgram vs OpenAI vs ElevenLabs vs Apple","item":"https://vtt.the-ihor.com/blog/deepgram-vs-openai-vs-elevenlabs-vs-apple.html"}
+  ]}
+  </script>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="../index.html"><span class="equ" aria-hidden="true"><i></i><i></i><i></i><i></i></span> VTT<sup>®</sup></a>
+      <nav class="nav-links">
+        <a class="lnk" href="../index.html#features">Features</a>
+        <a class="lnk" href="../blog/">Blog</a>
+        <a class="lnk" href="../support.html">Support</a>
+        <a class="btn" href="../index.html#download">Download</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <div class="page-head">
+        <span class="label">Comparison · Engines</span>
+        <h1>Deepgram vs OpenAI vs ElevenLabs vs Apple: which speech-to-text engine is best?</h1>
+        <div class="article-meta">
+          <span>By Ihor Herasymovych</span><span class="dot"></span>
+          <span>June 7, 2026</span><span class="dot"></span>
+          <span>8 min read</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <article class="doc">
+        <p class="lead-p">There is no single &ldquo;best&rdquo; speech-to-text engine — there&rsquo;s the best one <em>for a given job</em>. Apple&rsquo;s on-device models, Deepgram, OpenAI, and ElevenLabs each optimize for different things. Here&rsquo;s how they actually differ for Mac dictation, and how to decide.</p>
+
+        <h2><span class="n">01</span>The short answer</h2>
+        <ul>
+          <li><strong>Want privacy and zero cost?</strong> Apple on-device.</li>
+          <li><strong>Want low-latency streaming and tunable models?</strong> Deepgram.</li>
+          <li><strong>Want strong general accuracy and broad language coverage?</strong> OpenAI.</li>
+          <li><strong>Working in an audio/voice pipeline already?</strong> ElevenLabs.</li>
+        </ul>
+        <p>The honest version: for everyday dictation in a quiet room, all four are good enough that workflow matters more than the engine. The differences show up on hard audio, rare languages, latency, and where your data goes.</p>
+
+        <h2><span class="n">02</span>At a glance</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>&nbsp;</th><th>Apple (on-device)</th><th>Deepgram</th><th>OpenAI</th><th>ElevenLabs</th></tr>
+            </thead>
+            <tbody>
+              <tr><th>Runs locally</th><td class="yes">Yes</td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
+              <tr><th>Audio leaves your Mac</th><td class="yes">Never</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+              <tr><th>Works offline</th><td class="yes">Yes</td><td class="no">No</td><td class="no">No</td><td class="no">No</td></tr>
+              <tr><th>Cost model</th><td class="yes">Free</td><td>Pay per minute</td><td>Pay per minute</td><td>Pay per minute</td></tr>
+              <tr><th>Streaming latency</th><td>Very low</td><td class="yes">Very low</td><td>Low–medium</td><td>Low–medium</td></tr>
+              <tr><th>Hard-audio accuracy</th><td>Good</td><td>Very good</td><td class="yes">Excellent</td><td>Very good</td></tr>
+              <tr><th>Language breadth</th><td>Good</td><td>Broad</td><td class="yes">Very broad</td><td>Broad</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="color:var(--faint);font-size:13px">General positioning as of mid-2026; each provider updates models often, so verify current specifics and pricing on their sites.</p>
+
+        <h2><span class="n">03</span>Apple on-device (Speech framework)</h2>
+        <p><strong>Best for:</strong> privacy, offline use, and cost. The model runs on your Mac, so audio never leaves the device and there&rsquo;s nothing to pay per minute. The macOS&nbsp;26 on-device models are a real step up and handle clear, everyday speech cleanly. <strong>Trade-off:</strong> on genuinely difficult audio or niche vocabulary, the largest cloud models can still pull ahead, and you have less knob-turning control than a developer API gives you.</p>
+
+        <h2><span class="n">04</span>Deepgram</h2>
+        <p><strong>Best for:</strong> real-time, low-latency streaming and tunable transcription. Deepgram is built around fast streaming recognition and model options aimed at developers, which makes it a strong pick when responsiveness matters. <strong>Trade-off:</strong> it&rsquo;s cloud-only and pay-per-minute, so your audio is processed off-device and costs scale with usage.</p>
+
+        <h2><span class="n">05</span>OpenAI</h2>
+        <p><strong>Best for:</strong> top-tier general accuracy and very broad language coverage. OpenAI&rsquo;s speech models (the Whisper lineage and successors) are a safe default when you want the cleanest transcript on messy input across many languages. <strong>Trade-off:</strong> cloud-only and pay-per-minute, and streaming latency is typically a touch higher than a streaming-first engine like Deepgram.</p>
+
+        <h2><span class="n">06</span>ElevenLabs</h2>
+        <p><strong>Best for:</strong> teams already living in a voice/audio stack. ElevenLabs is best known for voice synthesis and has expanded into speech-to-text, so it&rsquo;s convenient if you&rsquo;re consolidating voice tooling with one vendor. <strong>Trade-off:</strong> cloud-only and pay-per-minute, like the other APIs.</p>
+
+        <h2><span class="n">07</span>The trick: you don&rsquo;t have to pick one</h2>
+        <p>The frustrating part of &ldquo;which engine is best?&rdquo; is that the answer changes by language and by recording. The better setup is to keep <strong>Apple on-device as the private, free default</strong> and route specific cases to the cloud engine that wins for them — for example, a hard second language to OpenAI, or a low-latency live scenario to Deepgram.</p>
+
+        <div class="cta-box">
+          <h3>Use every engine from one app</h3>
+          <p>VTT runs on-device by default and lets you add Deepgram, OpenAI, or ElevenLabs with your own key — then pick the engine per language. Free, no account.</p>
+          <a class="btn" href="../index.html#download">Download VTT</a>
+        </div>
+
+        <h2><span class="n">08</span>How to choose, in one line</h2>
+        <p>Default to <strong>Apple on-device</strong> for privacy and cost; reach for <strong>Deepgram</strong> when latency is king, <strong>OpenAI</strong> when accuracy across languages is king, and <strong>ElevenLabs</strong> when you&rsquo;re already in its ecosystem. And use a tool that lets you switch without re-recording.</p>
+
+        <div class="related">
+          <span class="label">Keep reading</span>
+          <a href="on-device-vs-cloud-dictation.html"><span>On-device vs cloud dictation: which is more private? →</span></a>
+          <a href="best-voice-to-text-for-mac-2026.html"><span>The best voice-to-text apps for Mac in 2026 →</span></a>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap foot-bottom">
+      <span>© 2026 Ihor Herasymovych · Independent app, not affiliated with Apple Inc.</span>
+      <nav>
+        <a href="../index.html">Home</a>
+        <a href="../blog/">Blog</a>
+        <a href="../privacy.html">Privacy</a>
+        <a href="../terms.html">Terms</a>
+        <a href="../support.html">Support</a>
+        <a href="https://github.com/the-ihor/vtt">GitHub</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

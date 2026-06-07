@@ -162,6 +162,14 @@
     .demo .bar i:nth-child(1){background:#ff5f57}.demo .bar i:nth-child(2){background:#febc2e}.demo .bar i:nth-child(3){background:#28c840}
     .demo .bar span { margin-left:8px; font-size:12px; color:var(--faint); }
     .demo .ph { border:0; border-radius:0; aspect-ratio:16/9; }
+    .sound-btn { position:absolute; right:16px; bottom:16px; z-index:3; display:inline-flex; align-items:center; gap:8px;
+      font-family:var(--sans); font-size:12.5px; font-weight:600; letter-spacing:.01em; color:#fff;
+      background:rgba(19,18,16,.66); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+      border:1px solid rgba(255,255,255,.18); padding:9px 14px; border-radius:999px; cursor:pointer;
+      transition:background .2s var(--ease), transform .2s var(--ease); }
+    .sound-btn:hover { background:rgba(19,18,16,.84); transform:translateY(-1px); }
+    .sound-btn svg { width:16px; height:16px; fill:currentColor; display:block; }
+    .sound-btn .si { display:inline-flex; }
 
     /* ticker */
     .ticker { border-top:1px solid var(--line); border-bottom:1px solid var(--line); overflow:hidden; padding:16px 0; margin-top:64px; }
@@ -298,7 +306,10 @@
           <div class="frame">
             <div class="bar" aria-hidden="true"><i></i><i></i><i></i><span>VTT — live demo</span></div>
             <div class="ph">
-              <video src="assets/hero.mp4" poster="assets/hero-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="VTT product demo"></video>
+              <video id="hero-video" src="assets/hero.mp4" poster="assets/hero-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="VTT product demo"></video>
+              <button class="sound-btn" id="sound-toggle" type="button" aria-pressed="false" aria-label="Enable sound">
+                <span class="si" aria-hidden="true"></span><span class="sl">Sound</span>
+              </button>
             </div>
           </div>
         </div>
@@ -589,6 +600,28 @@
       document.querySelectorAll('.reveal, .reveal-line').forEach(function(el){ io.observe(el); });
     } else {
       document.querySelectorAll('.reveal, .reveal-line').forEach(function(el){ el.classList.add('in'); });
+    }
+
+    // Hero video sound toggle
+    var hv = document.getElementById('hero-video');
+    var sb = document.getElementById('sound-toggle');
+    if (hv && sb) {
+      var ICON_OFF = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3z"/><path d="M16.5 8.5l5 5M21.5 8.5l-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>';
+      var ICON_ON  = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.7 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>';
+      var si = sb.querySelector('.si'), sl = sb.querySelector('.sl');
+      var render = function(){
+        var m = hv.muted;
+        si.innerHTML = m ? ICON_OFF : ICON_ON;
+        sl.textContent = m ? 'Sound' : 'Mute';
+        sb.setAttribute('aria-label', m ? 'Enable sound' : 'Mute');
+        sb.setAttribute('aria-pressed', m ? 'false' : 'true');
+      };
+      sb.addEventListener('click', function(){
+        hv.muted = !hv.muted;
+        if (!hv.muted) { hv.volume = 1; var p = hv.play(); if (p && p.catch) p.catch(function(){}); }
+        render();
+      });
+      render();
     }
   })();
   </script>

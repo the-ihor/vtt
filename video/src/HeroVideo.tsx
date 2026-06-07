@@ -17,7 +17,7 @@ import { Logo } from "./components/Logo";
 const CLIPS: Record<string, string | undefined> = {
   dictate: undefined, //   "clips/01-dictate.mp4"   press ^Space → speak → text auto-inserts
   apps: undefined, //      "clips/02-apps.mp4"      text landing in Mail / VS Code / Messages / browser
-  engines: undefined, //   "clips/03-engines.mp4"   provider list; Deepgram toggles on + free-credits chip
+  engines: undefined, //   "clips/03-engines.mp4"   provider list; pick an engine, paste your own API key (or stay on-device)
   languages: undefined, // "clips/04-languages.mp4" keyboard flips EN → RU → UK, output follows, no translate
   offline: undefined, //   "clips/05-offline.mp4"   Wi-Fi off → switch to Apple on-device model, still works
   flow: undefined, //      "clips/06-flow.mp4"       natural talking, ideas pouring into a doc
@@ -106,7 +106,7 @@ export const HeroVideo: React.FC = () => {
       </Scene>
       <Scene from={T.enginesClip} durationInFrames={T.anyLang - T.enginesClip}>
         <ClipSlot src={CLIPS.engines} label="Apple · Deepgram · OpenAI · ElevenLabs — your key" dim={0.35} />
-        <Caption>free tokens to start</Caption>
+        <Caption>your key &mdash; or fully local</Caption>
       </Scene>
 
       {/* ---- Phrase 3 — language + offline ---- */}

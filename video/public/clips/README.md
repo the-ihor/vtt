@@ -8,7 +8,7 @@ placeholder, so the whole film previews and exports right now.
 |---|---|---|
 | `dictate`   | `01-dictate.mp4`   | press `^Space` → speak → text auto-inserts into an app |
 | `apps`      | `02-apps.mp4`      | text landing in Mail · VS Code · Messages · browser |
-| `engines`   | `03-engines.mp4`   | provider list; Deepgram toggles on + free-credits chip |
+| `engines`   | `03-engines.mp4`   | provider list; pick an engine, paste your own API key (or stay fully on-device) |
 | `languages` | `04-languages.mp4` | keyboard flips EN → RU → UK, output follows (no translate) |
 | `offline`   | `05-offline.mp4`   | Wi-Fi off → switch to Apple on-device model, still works |
 | `flow`      | `06-flow.mp4`      | natural talking, ideas pouring into a doc |

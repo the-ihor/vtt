@@ -31,13 +31,24 @@
   <meta name="twitter:image" content="https://vtt.the-ihor.com/assets/og.png">
 
   <meta name="theme-color" content="#e9e6dd">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Crect%20width='100'%20height='100'%20rx='22'%20fill='%23121110'/%3E%3Cg%20fill='%23f23a1d'%3E%3Crect%20x='30'%20y='42'%20width='6'%20height='16'%20rx='3'/%3E%3Crect%20x='42'%20y='30'%20width='6'%20height='40'%20rx='3'/%3E%3Crect%20x='54'%20y='38'%20width='6'%20height='24'%20rx='3'/%3E%3Crect%20x='66'%20y='34'%20width='6'%20height='32'%20rx='3'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="/assets/logo.svg">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
 
   <script type="application/ld+json">
   {"@context":"https://schema.org","@graph":[
     {"@type":"Organization","@id":"https://vtt.the-ihor.com/#org","name":"VTT","url":"https://vtt.the-ihor.com/","founder":{"@type":"Person","name":"Ihor Herasymovych"}},
     {"@type":"WebSite","@id":"https://vtt.the-ihor.com/#website","url":"https://vtt.the-ihor.com/","name":"VTT","publisher":{"@id":"https://vtt.the-ihor.com/#org"},"inLanguage":"en"},
-    {"@type":"SoftwareApplication","name":"VTT","applicationCategory":"UtilitiesApplication","operatingSystem":"macOS 14 or later","url":"https://vtt.the-ihor.com/","description":"Native macOS menu-bar dictation app with private on-device transcription and optional cloud engines via your own API key.","downloadUrl":"https://github.com/the-ihor/vtt/releases/latest","softwareVersion":"1.0","featureList":["On-device transcription","Cloud engines (Deepgram, OpenAI, ElevenLabs)","Per-language model selection","Menu-bar app with global hotkey","Downloadable language models"],"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"publisher":{"@id":"https://vtt.the-ihor.com/#org"}}
+    {"@type":"SoftwareApplication","name":"VTT","applicationCategory":"UtilitiesApplication","operatingSystem":"macOS 14 or later","url":"https://vtt.the-ihor.com/","description":"Native macOS menu-bar dictation app with private on-device transcription and optional cloud engines via your own API key.","downloadUrl":"https://github.com/the-ihor/vtt/releases/latest","softwareVersion":"1.0","featureList":["On-device transcription","Cloud engines (Deepgram, OpenAI, ElevenLabs)","Per-language model selection","Menu-bar app with global hotkey","Downloadable language models"],"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"publisher":{"@id":"https://vtt.the-ihor.com/#org"}},
+    {"@type":"FAQPage","mainEntity":[
+      {"@type":"Question","name":"Is VTT private? Does my audio leave my Mac?","acceptedAnswer":{"@type":"Answer","text":"By default VTT transcribes on-device using Apple's Speech engine, so your audio never leaves your Mac. There is no account and no analytics. If you enable a cloud engine, audio is sent directly to that provider using your own API key."}},
+      {"@type":"Question","name":"Is VTT free?","acceptedAnswer":{"@type":"Answer","text":"Yes. VTT is free to start, with no account required. On-device dictation costs nothing. Cloud engines are pay-as-you-go on your own provider API key, only if you choose to use them."}},
+      {"@type":"Question","name":"Which speech engines does VTT support?","acceptedAnswer":{"@type":"Answer","text":"Apple's on-device Speech (including the macOS 26 models), plus optional cloud engines: Deepgram, OpenAI, and ElevenLabs. You can pick the engine per language."}},
+      {"@type":"Question","name":"What are the system requirements?","acceptedAnswer":{"@type":"Answer","text":"macOS 14 or later, on Apple Silicon or Intel."}},
+      {"@type":"Question","name":"Does VTT work offline?","acceptedAnswer":{"@type":"Answer","text":"Yes. On-device dictation works fully offline. An internet connection is only needed for cloud engines or to download additional language models."}},
+      {"@type":"Question","name":"How is VTT different from Apple's built-in Dictation?","acceptedAnswer":{"@type":"Answer","text":"VTT keeps the on-device privacy of Apple Dictation but adds engine choice (including large cloud models via your own key), per-language routing, downloadable models, and a real menu-bar workflow with a global hotkey and auto-insert."}}
+    ]}
   ]}
   </script>
 
@@ -211,6 +222,14 @@
     /* reveal */
     .reveal { opacity:0; transform:translateY(26px); transition:opacity .8s ease var(--d,0s), transform .9s var(--ease) var(--d,0s); }
     .reveal.in { opacity:1; transform:none; }
+    .faq { max-width:820px; margin:40px 0 0; border-top:1px solid var(--line); }
+    .faq details { border-bottom:1px solid var(--line); }
+    .faq summary { list-style:none; cursor:pointer; padding:24px 4px; display:flex; justify-content:space-between; gap:18px; align-items:baseline;
+      font-family:var(--disp); font-weight:600; font-size:clamp(18px,2.2vw,24px); letter-spacing:-.02em; }
+    .faq summary::-webkit-details-marker { display:none; }
+    .faq summary::after { content:"+"; color:var(--accent); font-weight:400; font-size:1.3em; line-height:1; transition:transform .2s var(--ease); }
+    .faq details[open] summary::after { content:"\2212"; }
+    .faq .a { padding:0 4px 26px; color:var(--muted); font-size:16px; line-height:1.6; max-width:64ch; }
     a:focus-visible, .btn:focus-visible { outline:2.5px solid var(--accent); outline-offset:3px; border-radius:4px; }
     @media (prefers-reduced-motion: reduce) {
       *, ::before, ::after { animation:none !important; transition-duration:.001ms !important; }
@@ -408,6 +427,42 @@
           <span class="eng reveal" style="--d:.12s">OpenAI</span>
           <span class="eng reveal" style="--d:.18s">ElevenLabs</span>
           <span class="eng reveal" style="--d:.24s">Bring your own key</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FAQ ===== -->
+    <section id="faq">
+      <div class="wrap">
+        <div class="sec-top">
+          <h2 class="sec-h display reveal">Questions, answered.</h2>
+          <span class="label reveal" style="--d:.1s">(FAQ)</span>
+        </div>
+        <div class="faq reveal">
+          <details open>
+            <summary>Is VTT private? Does my audio leave my Mac?</summary>
+            <div class="a">By default VTT transcribes on-device using Apple&rsquo;s Speech engine, so your audio never leaves your Mac. There&rsquo;s no account and no analytics. If you enable a cloud engine, audio is sent directly to that provider using your own API key.</div>
+          </details>
+          <details>
+            <summary>Is VTT free?</summary>
+            <div class="a">Yes — VTT is free to start, with no account required. On-device dictation costs nothing. Cloud engines are pay-as-you-go on your own provider API key, only if you choose to use them.</div>
+          </details>
+          <details>
+            <summary>Which speech engines does VTT support?</summary>
+            <div class="a">Apple&rsquo;s on-device Speech (including the macOS&nbsp;26 models), plus optional cloud engines: Deepgram, OpenAI, and ElevenLabs. You can pick the engine per language.</div>
+          </details>
+          <details>
+            <summary>What are the system requirements?</summary>
+            <div class="a">macOS 14 or later, on Apple Silicon or Intel. Download the build that matches your Mac — the site recommends the right one automatically.</div>
+          </details>
+          <details>
+            <summary>Does VTT work offline?</summary>
+            <div class="a">Yes. On-device dictation works fully offline. An internet connection is only needed if you choose a cloud engine or to download additional language models.</div>
+          </details>
+          <details>
+            <summary>How is VTT different from Apple&rsquo;s built-in Dictation?</summary>
+            <div class="a">VTT keeps the on-device privacy of Apple Dictation but adds engine choice (including large cloud models via your own key), per-language routing, downloadable models, and a real menu-bar workflow with a global hotkey and auto-insert.</div>
+          </details>
         </div>
       </div>
     </section>

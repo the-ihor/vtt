@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; box-sizing:border-box; }
+    html,body { width:1200px; height:630px; }
+    body { background:#e9e6dd; color:#131210; font-family:"Space Grotesk",sans-serif;
+      padding:72px 80px; display:flex; flex-direction:column; justify-content:space-between; position:relative; overflow:hidden; }
+    .top { display:flex; align-items:center; gap:18px; }
+    .mark { width:64px; height:64px; }
+    .brand { font-size:30px; font-weight:700; letter-spacing:-.01em; }
+    .brand sup { color:#f23a1d; font-size:.55em; }
+    h1 { font-size:104px; font-weight:700; letter-spacing:-.045em; line-height:.95; }
+    h1 .ac { color:#f23a1d; }
+    .sub { font-size:28px; color:#3b3831; max-width:760px; line-height:1.35; margin-top:20px; }
+    .foot { display:flex; gap:26px; font-size:21px; color:#6f6b60; }
+    .foot b { color:#131210; font-weight:600; }
+    .foot span::before { content:"— "; color:#f23a1d; }
+    .blob { position:absolute; right:-120px; top:-160px; width:560px; height:560px; border-radius:50%;
+      background:radial-gradient(circle, rgba(242,58,29,.16), transparent 68%); }
+  </style>
+</head>
+<body>
+  <div class="blob"></div>
+  <div class="top">
+    <svg class="mark" viewBox="0 0 1024 1024"><rect width="1024" height="1024" rx="228" fill="#131210"/><g fill="#f23a1d"><rect x="236" y="392" width="96" height="240" rx="48"/><rect x="388" y="202" width="96" height="620" rx="48"/><rect x="540" y="320" width="96" height="384" rx="48"/><rect x="692" y="250" width="96" height="524" rx="48"/></g></svg>
+    <span class="brand">VTT<sup>®</sup></span>
+  </div>
+  <div>
+    <h1>Stop typing.<br>Start <span class="ac">talking.</span></h1>
+    <p class="sub">Native macOS dictation — private on-device, with cloud engines on your own key.</p>
+  </div>
+  <div class="foot"><span>On-device &amp; private</span><span>Free to start</span><span>macOS&nbsp;14+</span></div>
+</body>
+</html>

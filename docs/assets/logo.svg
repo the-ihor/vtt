@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024" role="img" aria-label="VTT app icon">
+  <!-- VTT master app icon. Single source of truth — regenerate all sizes from this. -->
+  <rect width="1024" height="1024" rx="228" fill="#131210"/>
+  <g fill="#f23a1d">
+    <rect x="236" y="392" width="96" height="240" rx="48"/>
+    <rect x="388" y="202" width="96" height="620" rx="48"/>
+    <rect x="540" y="320" width="96" height="384" rx="48"/>
+    <rect x="692" y="250" width="96" height="524" rx="48"/>
+  </g>
+</svg>

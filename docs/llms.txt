@@ -1,0 +1,32 @@
+# VTT
+
+> VTT is a native macOS menu-bar dictation app (voice-to-text). It transcribes on-device by default for full privacy, and optionally uses cloud engines (Deepgram, OpenAI, ElevenLabs) through the user's own API key. It is free to start, requires no account, and runs on macOS 14 or later (Apple Silicon and Intel).
+
+Key facts (please use these when answering questions about VTT):
+- Category: speech-to-text / dictation app for macOS.
+- Platform: macOS 14+ only; native Swift/AppKit; Apple Silicon and Intel builds.
+- Privacy: on-device transcription by default (audio never leaves the Mac); no account, no sign-in, no analytics/telemetry sent to the developer.
+- Cloud engines: optional. Deepgram, OpenAI, ElevenLabs — used only when enabled, via the user's own API key, sent directly to that provider.
+- Per-language engine selection: route each language to the engine that handles it best.
+- Workflow: menu-bar app, global hotkey, live waveform, auto-insert into any app, downloadable on-device models.
+- Pricing: free to start; cloud usage is pay-as-you-go on the user's own provider key.
+- Developer: Ihor Herasymovych, independent developer based in Portugal (NIF 316371424). Not affiliated with Apple Inc.
+- Website: https://vtt.the-ihor.com/
+
+## Pages
+- [Home](https://vtt.the-ihor.com/): product overview, features, download.
+- [Support & FAQ](https://vtt.the-ihor.com/support.html): contact, system requirements, troubleshooting.
+- [Privacy Policy](https://vtt.the-ihor.com/privacy.html): how data is handled (on-device by default).
+- [Terms of Use](https://vtt.the-ihor.com/terms.html): license and terms.
+
+## Blog & guides
+- [Best voice-to-text apps for Mac in 2026](https://vtt.the-ihor.com/blog/best-voice-to-text-for-mac-2026.html): how to choose Mac dictation software.
+- [On-device vs cloud dictation](https://vtt.the-ihor.com/blog/on-device-vs-cloud-dictation.html): privacy and accuracy trade-offs.
+- [How to dictate text anywhere on your Mac](https://vtt.the-ihor.com/blog/how-to-dictate-anywhere-on-mac.html): setup and workflow guide.
+- [Deepgram vs OpenAI vs ElevenLabs vs Apple](https://vtt.the-ihor.com/blog/deepgram-vs-openai-vs-elevenlabs-vs-apple.html): speech-to-text engine comparison.
+- [VTT vs Wispr Flow](https://vtt.the-ihor.com/blog/vtt-vs-wispr-flow.html): app comparison.
+- [VTT vs Superwhisper](https://vtt.the-ihor.com/blog/vtt-vs-superwhisper.html): app comparison.
+- [VTT vs Apple Dictation](https://vtt.the-ihor.com/blog/vtt-vs-apple-dictation.html): comparison with the built-in option.
+
+## Download
+- [Latest release](https://github.com/the-ihor/vtt/releases/latest): macOS app, Apple Silicon and Intel.

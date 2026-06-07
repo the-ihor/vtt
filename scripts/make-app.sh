@@ -17,6 +17,11 @@ mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN" "$APP/Contents/MacOS/VTT"
 cp "$ROOT/Resources/Info.plist" "$APP/Contents/Info.plist"
 
+# App icon (regenerate via docs/assets/generate-logos.sh, then keep Resources/AppIcon.icns in sync).
+if [ -f "$ROOT/Resources/AppIcon.icns" ]; then
+  cp "$ROOT/Resources/AppIcon.icns" "$APP/Contents/Resources/AppIcon.icns"
+fi
+
 # Bundle provider brand logos if present (optional). Drop official PNGs into
 # Resources/Logos/ (openai.png, deepgram.png, elevenlabs.png) to use real logos.
 if ls "$ROOT"/Resources/Logos/*.png >/dev/null 2>&1; then

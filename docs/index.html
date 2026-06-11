@@ -142,6 +142,18 @@
     .meta-row { display:flex; gap:22px; flex-wrap:wrap; color:var(--faint); font-size:12.5px; margin-top:18px; }
     .meta-row span::before { content:"— "; color:var(--accent); }
 
+    /* product hunt card */
+    .ph-card { display:flex; align-items:center; gap:14px; margin-top:22px; padding:14px 16px; max-width:420px;
+      background:var(--card); border:1px solid var(--line); border-radius:14px; text-decoration:none; color:inherit;
+      transition:border-color .2s, transform .2s; }
+    .ph-card:hover { border-color:var(--accent); transform:translateY(-1px); }
+    .ph-card img { width:52px; height:52px; border-radius:10px; flex-shrink:0; }
+    .ph-card .ph-card-txt { min-width:0; }
+    .ph-card .ph-card-kicker { font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); font-weight:700; }
+    .ph-card .ph-card-name { font-size:15px; font-weight:700; color:var(--ink); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .ph-card .ph-card-sub { font-size:12.5px; color:var(--muted); margin-top:2px; }
+    .ph-card .ph-card-arrow { margin-left:auto; color:var(--accent); font-weight:700; flex-shrink:0; }
+
     /* media placeholders */
     .ph { position:relative; background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden; }
     .ph::before, .ph::after { content:""; position:absolute; width:14px; height:14px; border:1.5px solid var(--faint); opacity:.5; }
@@ -298,6 +310,15 @@
             </div>
             <p class="dl-hint" aria-live="polite"></p>
             <div class="meta-row"><span>Start free</span><span>No account</span><span>macOS 14+</span></div>
+            <a class="ph-card" href="https://www.producthunt.com/products/vtt-for-mac?embed=true&amp;utm_source=embed&amp;utm_medium=post_embed" target="_blank" rel="noopener">
+              <img src="https://ph-files.imgix.net/9bd4cb8b-adf7-401a-aa30-8c594fc34fef.gif?auto=compress,format&amp;codec=mozjpeg&amp;cs=strip&amp;fit=crop&amp;h=80&amp;w=80" alt="VTT for Mac on Product Hunt" loading="lazy">
+              <span class="ph-card-txt">
+                <span class="ph-card-kicker" style="display:block">Live on Product Hunt</span>
+                <span class="ph-card-name" style="display:block">VTT for Mac</span>
+                <span class="ph-card-sub" style="display:block">Come say hi &amp; leave feedback</span>
+              </span>
+              <span class="ph-card-arrow" aria-hidden="true">→</span>
+            </a>
           </div>
         </div>
 

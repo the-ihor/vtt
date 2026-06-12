@@ -3,6 +3,7 @@ import { HeroVideo } from "./HeroVideo";
 import { LogoGif } from "./LogoGif";
 import { SubscriptionArt } from "./SubscriptionArt";
 import { APPSTORE_SHOTS, APPSTORE_SHOTS_UA, SHOT_SIZE } from "./appstore/AppStoreShots";
+import { DmgBackground, DMG_SIZE } from "./DmgBackground";
 import { GALLERY, GALLERY_SIZE } from "./gallery/GallerySlides";
 import { FPS, f } from "./theme";
 
@@ -24,6 +25,12 @@ export const RemotionRoot: React.FC = () => {
         fps={FPS}
         width={240}
         height={240}
+      />
+      <Still
+        id="DmgBackground"
+        component={DmgBackground}
+        width={DMG_SIZE.width}
+        height={DMG_SIZE.height}
       />
       <Still
         id="SubscriptionArt"

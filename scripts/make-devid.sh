@@ -57,11 +57,44 @@ codesign --verify --strict --verbose=2 "$APP"
 
 echo "› Creating dmg…"
 STAGE="$OUT/stage"
-mkdir -p "$STAGE"
+mkdir -p "$STAGE/.background"
 cp -R "$APP" "$STAGE/"
+cp "$ROOT/Resources/dmg-background.tiff" "$STAGE/.background/background.tiff"
 ln -s /Applications "$STAGE/Applications"
-hdiutil create -volname "VTT" -srcfolder "$STAGE" -ov -format UDZO "$DMG" >/dev/null
-rm -rf "$STAGE"
+
+# Build read-write first, lay out the window with Finder (background art,
+# icon positions — rendered via video/src/DmgBackground.tsx), then compress.
+RW="$OUT/VTT-rw.dmg"
+hdiutil detach "/Volumes/VTT" >/dev/null 2>&1 || true
+hdiutil create -volname "VTT" -srcfolder "$STAGE" -ov -format UDRW "$RW" >/dev/null
+hdiutil attach "$RW" -readwrite -noverify -noautoopen >/dev/null
+
+osascript <<'OSA'
+tell application "Finder"
+  tell disk "VTT"
+    open
+    set current view of container window to icon view
+    set toolbar visible of container window to false
+    set statusbar visible of container window to false
+    set the bounds of container window to {200, 120, 860, 520}
+    set vo to the icon view options of container window
+    set arrangement of vo to not arranged
+    set icon size of vo to 128
+    set text size of vo to 13
+    set background picture of vo to POSIX file "/Volumes/VTT/.background/background.tiff"
+    set position of item "VTT.app" of container window to {165, 200}
+    set position of item "Applications" of container window to {495, 200}
+    update without registering applications
+    delay 1
+    close
+  end tell
+end tell
+OSA
+
+sync
+hdiutil detach "/Volumes/VTT" >/dev/null
+hdiutil convert "$RW" -format UDZO -o "$DMG" -ov >/dev/null
+rm -f "$RW"; rm -rf "$STAGE"
 codesign --force --sign "$SIGN_ID" --timestamp "$DMG"
 
 echo "› Notarizing (waits for Apple)…"

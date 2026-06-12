@@ -34,7 +34,10 @@ final class Permissions: ObservableObject {
     func requestSpeech() {
         switch speech {
         case .notDetermined:
-            SFSpeechRecognizer.requestAuthorization { _ in
+            // TCC invokes the handler on a background queue. Explicitly
+            // @Sendable so it doesn't inherit this class's MainActor isolation
+            // — the runtime traps on that mismatch (dispatch_assert_queue).
+            SFSpeechRecognizer.requestAuthorization { @Sendable _ in
                 Task { @MainActor in self.refresh() }
             }
         default:
@@ -49,7 +52,8 @@ final class Permissions: ObservableObject {
     func requestMic() {
         switch mic {
         case .notDetermined:
-            AVCaptureDevice.requestAccess(for: .audio) { _ in
+            // Same background-queue callback contract as requestSpeech above.
+            AVCaptureDevice.requestAccess(for: .audio) { @Sendable _ in
                 Task { @MainActor in self.refresh() }
             }
         default:

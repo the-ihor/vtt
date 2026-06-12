@@ -12,7 +12,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var cancelHotKey: HotKey!
     private var toggleItem: NSMenuItem?
     private var settingsWindow: NSWindow?
+    private var onboardingWindow: NSWindow?
+    private var onboardingCloseObserver: NSObjectProtocol?
     private var cancellables = Set<AnyCancellable>()
+
+    private static let onboardingDoneKey = "hasCompletedOnboarding"
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         setupMainMenu()
@@ -22,6 +26,84 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         observeScreenChanges()
         observeMode()
         observeFreeLimit()
+        showOnboardingIfNeeded()
+    }
+
+    // MARK: - Onboarding
+
+    /// Welcome flow that collects the system permissions and the
+    /// launch-at-login choice, then opens Settings. Shown on first launch, and
+    /// again on any launch where a permission is missing — repeat showings skip
+    /// the welcome page and land directly on the permissions step.
+    private func showOnboardingIfNeeded() {
+        let permissions = state.permissions
+        permissions.refresh()
+        let allGranted = permissions.mic == .authorized
+            && permissions.speech == .authorized
+            && permissions.accessibilityTrusted
+        let firstRun = !UserDefaults.standard.bool(forKey: Self.onboardingDoneKey)
+        guard firstRun || !allGranted else { return }
+
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 540, height: 600),
+            styleMask: [.titled, .closable, .fullSizeContentView],
+            backing: .buffered,
+            defer: false
+        )
+        window.title = "Welcome to VTT"
+        window.titleVisibility = .hidden
+        window.titlebarAppearsTransparent = true
+        window.isReleasedWhenClosed = false
+        window.center()
+        window.contentView = NSHostingView(
+            rootView: OnboardingView(
+                permissions: state.permissions,
+                state: state,
+                initialStep: firstRun ? 0 : 1
+            ) { [weak self] in
+                self?.finishOnboarding(openSettingsAfter: true)
+            }
+        )
+        onboardingWindow = window
+
+        onboardingCloseObserver = NotificationCenter.default.addObserver(
+            forName: NSWindow.willCloseNotification,
+            object: window,
+            queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated { self?.finishOnboarding(openSettingsAfter: false) }
+        }
+
+        bringToFront(window)
+    }
+
+    private func finishOnboarding(openSettingsAfter: Bool) {
+        guard let window = onboardingWindow else { return }
+        UserDefaults.standard.set(true, forKey: Self.onboardingDoneKey)
+        onboardingWindow = nil
+        if let onboardingCloseObserver {
+            NotificationCenter.default.removeObserver(onboardingCloseObserver)
+            self.onboardingCloseObserver = nil
+        }
+        window.orderOut(nil)
+        if openSettingsAfter { openSettings() } else { returnToAccessoryIfIdle() }
+    }
+
+    // MARK: - Activation policy
+
+    /// An LSUIElement app is a background app: its windows take clicks but it
+    /// never becomes the active application, so they drop behind whoever is
+    /// active. While a real window (onboarding, Settings) is open we promote
+    /// ourselves to a regular app, and step back once the last one closes.
+    private func bringToFront(_ window: NSWindow) {
+        NSApp.setActivationPolicy(.regular)
+        NSApp.activate(ignoringOtherApps: true)
+        window.makeKeyAndOrderFront(nil)
+    }
+
+    private func returnToAccessoryIfIdle() {
+        let anyVisible = [onboardingWindow, settingsWindow].contains { $0?.isVisible == true }
+        if !anyVisible { NSApp.setActivationPolicy(.accessory) }
     }
 
     /// When a free-tier user hits the daily limit, offer to subscribe — or to
@@ -233,8 +315,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 rootView: SettingsView(state: state, permissions: state.permissions)
             )
             settingsWindow = window
+            NotificationCenter.default.addObserver(
+                forName: NSWindow.willCloseNotification,
+                object: window,
+                queue: .main
+            ) { [weak self] _ in
+                // Defer one runloop turn so isVisible is already false.
+                DispatchQueue.main.async {
+                    MainActor.assumeIsolated { self?.returnToAccessoryIfIdle() }
+                }
+            }
         }
-        NSApp.activate(ignoringOtherApps: true)
-        settingsWindow?.makeKeyAndOrderFront(nil)
+        settingsWindow.map(bringToFront)
     }
 }

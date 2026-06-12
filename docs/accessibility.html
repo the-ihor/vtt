@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-KZ3DCSFW');</script>
+  <!-- End Google Tag Manager -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Accessibility — VTT</title>
+  <meta name="description" content="How VTT supports VoiceOver, Voice Control, Dark Interface, Reduced Motion, and other macOS accessibility features.">
+  <link rel="canonical" href="https://vtt.the-ihor.com/accessibility.html">
+  <meta name="author" content="Ihor Herasymovych">
+  <meta name="robots" content="index,follow">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="VTT">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://vtt.the-ihor.com/accessibility.html">
+  <meta property="og:title" content="Accessibility — VTT">
+  <meta property="og:description" content="How VTT supports VoiceOver, Voice Control, Dark Interface, Reduced Motion, and other macOS accessibility features.">
+  <meta property="og:image" content="https://vtt.the-ihor.com/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Accessibility — VTT">
+  <meta name="twitter:image" content="https://vtt.the-ihor.com/assets/og.png">
+  <meta name="theme-color" content="#e9e6dd">
+  <link rel="icon" type="image/svg+xml" href="/assets/logo.svg">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="legal.css">
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KZ3DCSFW"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="index.html"><span class="equ" aria-hidden="true"><i></i><i></i><i></i><i></i></span> VTT<sup>®</sup></a>
+      <nav class="nav-links">
+        <a class="lnk" href="index.html#features">Features</a>
+        <a class="lnk" href="terms.html">Terms</a>
+        <a class="lnk" href="support.html">Support</a>
+        <a class="btn" href="index.html#download">Download</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <div class="page-head">
+        <span class="label">About · Accessibility</span>
+        <h1>Accessibility <span class="ac">in VTT</span></h1>
+        <p class="meta">Last updated <b>June 12, 2026</b></p>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <article class="doc">
+        <div class="tldr">
+          <span class="label">The short version</span>
+          <p>Dictation is itself an accessibility tool, so VTT is built to be usable without sight, without a pointer, and without motion. The app supports <strong>VoiceOver</strong>, <strong>Voice Control</strong>, <strong>Dark Interface</strong>, <strong>Differentiate Without Color Alone</strong>, <strong>Sufficient Contrast</strong>, and <strong>Reduced Motion</strong> on macOS. Found something that doesn't work for you? <a href="#feedback">Tell us</a> — accessibility reports are treated as bugs, not feature requests.</p>
+        </div>
+
+        <nav class="toc" aria-label="Sections">
+          <a href="#voiceover">VoiceOver</a>
+          <a href="#voicecontrol">Voice Control</a>
+          <a href="#dark">Dark Interface</a>
+          <a href="#color">Without color alone</a>
+          <a href="#contrast">Contrast</a>
+          <a href="#motion">Reduced Motion</a>
+          <a href="#keyboard">Keyboard</a>
+          <a href="#feedback">Feedback</a>
+        </nav>
+
+        <h2 id="voiceover"><span class="n">01</span>VoiceOver</h2>
+        <p>Every control in VTT has a spoken name, value, and role. The floating dictation bar is exposed as a single <em>&ldquo;Dictation&rdquo;</em> button whose value describes the current state — idle, recording (including the live transcript as it forms), or transcribing — and state changes are announced as they happen: <em>&ldquo;Recording&rdquo;</em>, <em>&ldquo;Transcribing&rdquo;</em>, <em>&ldquo;Dictation stopped&rdquo;</em>. In Settings, keyboard-shortcut controls speak their assignments in words rather than symbols, and repeated actions (like copying a past dictation) identify which item they act on.</p>
+
+        <h2 id="voicecontrol"><span class="n">02</span>Voice Control</h2>
+        <p>All interactive elements carry distinct names, so they can be targeted directly by voice. Dictation itself can be started and stopped entirely hands-free: via the named menu-bar item, the floating bar button, or a global keyboard shortcut that Voice Control can trigger.</p>
+
+        <h2 id="dark"><span class="n">03</span>Dark Interface</h2>
+        <p>VTT follows the system appearance. The Settings window uses native macOS controls and semantic colors, so it renders correctly in both light and dark mode; the floating dictation bar uses a high-contrast dark design in both appearances.</p>
+
+        <h2 id="color"><span class="n">04</span>Differentiate Without Color Alone</h2>
+        <p>No state in VTT is communicated by color alone. The dictation bar pairs each state with a distinct symbol (microphone for idle, stop square while recording, waveform while transcribing); permission and availability statuses in Settings pair color with both an icon and a text label (&ldquo;Granted&rdquo;, &ldquo;Not supported&rdquo;); usage limits are shown as numeric percentages, not just a colored bar.</p>
+
+        <h2 id="contrast"><span class="n">05</span>Sufficient Contrast</h2>
+        <p>Text in the app meets or exceeds the 4.5:1 contrast ratio. The floating bar renders white text on near-black (about 10:1 at its dimmest), and the Settings window uses the system's semantic text colors, which adapt with the user's appearance and contrast preferences.</p>
+
+        <h2 id="motion"><span class="n">06</span>Reduced Motion</h2>
+        <p>When <em>Reduce Motion</em> is enabled in System Settings, VTT disables its spring animations and stops the waveform's idle shimmer. The waveform bars still rise and fall with your actual voice level while recording — feedback that you are being heard is preserved — but nothing on screen moves on its own.</p>
+
+        <h2 id="keyboard"><span class="n">07</span>Keyboard access</h2>
+        <p>Dictation starts and stops with a global, user-configurable keyboard shortcut — no pointer required. All Settings controls are reachable with full keyboard navigation as standard macOS controls.</p>
+
+        <h2 id="feedback"><span class="n">08</span>Feedback</h2>
+        <p>If any part of VTT is hard or impossible to use with an assistive technology, that is a bug and we want to fix it. Email <a href="mailto:mgorunuch.igor@gmail.com">mgorunuch.igor@gmail.com</a> with the assistive technology you use (e.g. VoiceOver, Voice Control, Switch Control) and what you were trying to do. Accessibility reports are prioritized alongside crashes.</p>
+
+        <hr>
+        <p style="color:var(--faint);font-size:13px">VTT is an independent app and is not affiliated with Apple Inc. VoiceOver, Voice Control, and macOS are trademarks of Apple Inc.</p>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap foot-bottom">
+      <span>© 2026 Ihor Herasymovych · Independent app, not affiliated with Apple Inc.</span>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="blog/">Blog</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="support.html">Support</a>
+        <a href="accessibility.html">Accessibility</a>
+        <a href="https://github.com/the-ihor/vtt">GitHub</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

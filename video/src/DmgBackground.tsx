@@ -2,11 +2,11 @@ import { AbsoluteFill } from "remotion";
 import { C, fontFamily } from "./theme";
 
 // Background for the VTT.dmg installer window — 660×400 pt logical size
-// (render at --scale 2 for the @2x variant; both are combined into a retina
-// TIFF by scripts/make-dmg-background.sh). The app icon sits at (165,200),
-// the Applications alias at (495,200), icon size 128 — the arrow bridges them.
+// (render at --scale 2 for the @2x variant; both go into a retina TIFF).
+// The app icon sits at (165,170), the Applications alias at (495,170),
+// icon size 128 — the arrow bridges them.
 
-export const DMG_SIZE = { width: 660, height: 400 } as const;
+export const DMG_SIZE = { width: 660, height: 360 } as const;
 
 const Mark: React.FC<{ size?: number }> = ({ size = 30 }) => {
   const s = size / 1024;
@@ -61,7 +61,7 @@ export const DmgBackground: React.FC = () => (
       width={170}
       height={56}
       viewBox="0 0 170 56"
-      style={{ position: "absolute", left: 245, top: 172 }}
+      style={{ position: "absolute", left: 245, top: 142 }}
     >
       <path
         d="M8 28 H134"
@@ -85,7 +85,7 @@ export const DmgBackground: React.FC = () => (
         position: "absolute",
         left: 0,
         right: 0,
-        top: 304,
+        top: 276,
         textAlign: "center",
         fontSize: 15,
         fontWeight: 600,
@@ -99,7 +99,7 @@ export const DmgBackground: React.FC = () => (
         position: "absolute",
         left: 0,
         right: 0,
-        top: 330,
+        top: 302,
         textAlign: "center",
         fontSize: 12,
         fontWeight: 500,
@@ -108,7 +108,7 @@ export const DmgBackground: React.FC = () => (
         color: C.faint,
       }}
     >
-      then press ⌃Space anywhere and start talking
+      then start VTT, press ⌃Space anywhere, and start talking
     </div>
   </AbsoluteFill>
 );

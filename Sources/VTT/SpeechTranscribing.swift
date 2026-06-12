@@ -76,6 +76,20 @@ enum SpeechSource: String, CaseIterable, Identifiable, Sendable {
         }
     }
 
+    /// Official page where the user creates / finds an API key (cloud only).
+    var apiKeyGuideURL: URL? {
+        switch self {
+        case .appleOnDevice, .appleSpeechAnalyzer:
+            nil
+        case .deepgram:
+            URL(string: "https://developers.deepgram.com/docs/create-additional-api-keys")
+        case .elevenLabs:
+            URL(string: "https://elevenlabs.io/app/settings/api-keys")
+        case .openAI:
+            URL(string: "https://platform.openai.com/api-keys")
+        }
+    }
+
     /// What the provider needs before it can run.
     var access: ProviderAccess {
         switch self {

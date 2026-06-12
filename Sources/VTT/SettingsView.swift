@@ -449,6 +449,11 @@ private struct HistoryTab: View {
                                 .foregroundStyle(.secondary)
                             Spacer()
                             Button("Copy") { state.copyToClipboard(entry.text) }
+                                // Disambiguate the repeated "Copy" buttons for
+                                // VoiceOver and Voice Control.
+                                .accessibilityLabel(
+                                    "Copy dictation from \(entry.date.formatted(date: .abbreviated, time: .shortened))"
+                                )
                         }
                     }
                 }
@@ -569,6 +574,9 @@ private struct DailyUsageBar: View {
                 .font(.caption)
                 .foregroundStyle(fraction >= 1 ? .red : .secondary)
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Daily free usage")
+        .accessibilityValue("\(Int((fraction * 100).rounded())) percent used today")
     }
 }
 
@@ -616,10 +624,14 @@ private struct HotkeyRow: View {
                 .buttonStyle(.bordered)
                 .tint(recording ? .accentColor : nil)
                 .disabled(!chord.enabled && !recording)
+                // The visual label is glyphs (⌃⌥D) — give VoiceOver words.
+                .accessibilityLabel("Change \(title) shortcut")
+                .accessibilityValue(recording ? "Recording, press keys now" : chord.display)
 
                 Toggle("", isOn: $chord.enabled)
                     .labelsHidden()
                     .toggleStyle(.switch)
+                    .accessibilityLabel("\(title) shortcut enabled")
             }
         }
         .onDisappear(perform: stop)
@@ -673,6 +685,8 @@ private struct ProviderIcon: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 16, height: 16)
+                // Decorative — the sidebar Label's title already names it.
+                .accessibilityHidden(true)
         } else {
             Image(systemName: provider.symbol)
         }
@@ -789,6 +803,17 @@ private struct APIKeyField: View {
                 .disabled(key == state.apiKey(for: provider))
         }
         .task(id: provider) { key = state.apiKey(for: provider) }
+
+        if let guide = provider.apiKeyGuideURL {
+            Link(destination: guide) {
+                Label(
+                    "How to get a \(provider.shortName) API key",
+                    systemImage: "arrow.up.right.square"
+                )
+            }
+            .font(.caption)
+            .accessibilityLabel("How to get a \(provider.shortName) API key — opens \(guide.host ?? "the provider's website") in your browser")
+        }
     }
 }
 

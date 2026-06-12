@@ -11,10 +11,21 @@ struct HotkeyChord: Equatable, Sendable {
     var enabled: Bool = true
 
     static let f13 = HotkeyChord(keyCode: UInt32(kVK_F13), modifiers: 0)
+    static let ctrlSpace = HotkeyChord(
+        keyCode: UInt32(kVK_Space),
+        modifiers: UInt32(controlKey)
+    )
     static let ctrlOptSpace = HotkeyChord(
         keyCode: UInt32(kVK_Space),
         modifiers: UInt32(controlKey | optionKey)
     )
+
+    /// The same chord, switched off — for presets that default to disabled.
+    var disabled: HotkeyChord {
+        var c = self
+        c.enabled = false
+        return c
+    }
 
     /// Human-readable chord, e.g. "⌃⌥Space" or "F13".
     var display: String {

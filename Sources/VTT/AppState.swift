@@ -270,14 +270,15 @@ final class AppState: ObservableObject {
         usageDay = daily.day
         secondsUsedToday = daily.seconds
         begsUsedToday = daily.begs
-        autoInsert = UserDefaults.standard.bool(forKey: "autoInsert")
+        // Auto-insert is the product's core promise — on unless turned off.
+        autoInsert = UserDefaults.standard.object(forKey: "autoInsert") as? Bool ?? true
         // Default the live-text toggle on unless the user has turned it off.
         showLiveText = UserDefaults.standard.object(forKey: "showLiveText") as? Bool ?? true
         muteWhileRecording = UserDefaults.standard.object(forKey: "muteWhileRecording") as? Bool ?? true
         activeLanguage = UserDefaults.standard.string(forKey: "activeLanguage") ?? Languages.auto
         selectorLanguages = Languages.keyboard().map(\.code)
-        primaryHotkey = Self.load(forKey: "primaryHotkey") ?? .f13
-        alternativeHotkey = Self.load(forKey: "alternativeHotkey") ?? .ctrlOptSpace
+        primaryHotkey = Self.load(forKey: "primaryHotkey") ?? .ctrlSpace
+        alternativeHotkey = Self.load(forKey: "alternativeHotkey") ?? HotkeyChord.f13.disabled
 
         // Keep the active language valid (auto, or one of the keyboard languages).
         if activeLanguage != Languages.auto, !selectorLanguages.contains(activeLanguage) {
@@ -329,14 +330,35 @@ final class AppState: ObservableObject {
     /// Accessibility). Used by history rows and the menu-bar action.
     func paste(_ text: String) {
         guard !text.isEmpty else { return }
-        copyToClipboard(text)
         permissions.refresh()
         guard permissions.accessibilityTrusted else {
+            // No paste possible — leave the text on the clipboard so the user
+            // can ⌘V it themselves.
+            copyToClipboard(text)
             NSLog("VTT: paste requested but Accessibility not granted (text is on the clipboard)")
             return
         }
         // Let the menu/Settings window close and focus return to the target app.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { TextInserter.paste() }
+        pastePreservingClipboard(text, after: 0.15)
+    }
+
+    /// Paste `text` via the clipboard without polluting it: snapshot what's
+    /// there, paste, then put the snapshot back once the target app has had
+    /// time to consume the ⌘V. Skips the restore if the pasteboard changed in
+    /// the meantime (the user copied something newer — never clobber that).
+    private func pastePreservingClipboard(_ text: String, after delay: TimeInterval = 0) {
+        let saved = Clipboard.snapshot()
+        copyToClipboard(text)
+        let ourChange = NSPasteboard.general.changeCount
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+            TextInserter.paste()
+            // Slow consumers (Electron apps) read the pasteboard noticeably
+            // after the key event lands — don't restore out from under them.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                guard NSPasteboard.general.changeCount == ourChange else { return }
+                Clipboard.restore(saved)
+            }
+        }
     }
 
     /// Paste the most recent transcription into the focused app.
@@ -449,8 +471,8 @@ final class AppState: ObservableObject {
 
     /// Restore both hotkeys to their factory defaults.
     func resetHotkeys() {
-        primaryHotkey = .f13
-        alternativeHotkey = .ctrlOptSpace
+        primaryHotkey = .ctrlSpace
+        alternativeHotkey = HotkeyChord.f13.disabled
     }
 
     private static func load(forKey key: String) -> HotkeyChord? {
@@ -767,13 +789,16 @@ final class AppState: ObservableObject {
             }
             if !text.isEmpty {
                 addHistory(text)
-                NSPasteboard.general.clearContents()
-                NSPasteboard.general.setString(text, forType: .string)
-                if autoInsert {
-                    permissions.refresh()
-                    if permissions.accessibilityTrusted {
-                        TextInserter.paste()
-                    } else {
+                permissions.refresh()
+                if autoInsert, permissions.accessibilityTrusted {
+                    // Paste at the cursor and leave the user's clipboard alone
+                    // — the transcript stays retrievable from History.
+                    pastePreservingClipboard(text)
+                } else {
+                    // Not pasting (toggle off or no Accessibility): the
+                    // clipboard is the delivery mechanism, so it keeps the text.
+                    copyToClipboard(text)
+                    if autoInsert {
                         NSLog("VTT: auto-insert on but Accessibility not granted")
                     }
                 }

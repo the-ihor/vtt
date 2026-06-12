@@ -9,6 +9,7 @@ import SwiftUI
 private enum SettingsTab: Hashable {
     case provider(SpeechSource)
     case general
+    case history
     case pro
 }
 
@@ -30,6 +31,9 @@ struct SettingsView: View {
             List(selection: $tab) {
                 Label("General", systemImage: "gearshape")
                     .tag(SettingsTab.general)
+
+                Label("History", systemImage: "clock.arrow.circlepath")
+                    .tag(SettingsTab.history)
 
                 Label("Subscription", systemImage: state.isPro ? "checkmark.seal.fill" : "sparkles")
                     .tag(SettingsTab.pro)
@@ -76,6 +80,7 @@ struct SettingsView: View {
         switch tab {
         case .provider(let provider): provider.displayName
         case .general: "General"
+        case .history: "History"
         case .pro: "Subscription"
         }
     }
@@ -86,14 +91,14 @@ struct SettingsView: View {
         case .provider(let provider):
             ProviderTab(
                 provider: provider,
-                isActive: state.source == provider,
-                makeActive: { state.source = provider },
                 state: state,
                 permissions: permissions,
                 catalog: state.modelCatalog
             )
         case .general:
             GeneralTab(state: state, permissions: permissions)
+        case .history:
+            HistoryTab(state: state)
         case .pro:
             ProTab(state: state, store: state.store)
         }
@@ -103,11 +108,26 @@ struct SettingsView: View {
 /// A single provider's tab: status, activation, and its access buttons.
 private struct ProviderTab: View {
     let provider: SpeechSource
-    let isActive: Bool
-    let makeActive: () -> Void
     @ObservedObject var state: AppState
     @ObservedObject var permissions: Permissions
     @ObservedObject var catalog: ModelCatalog
+
+    /// The user's keyboard languages this provider can transcribe.
+    private var supportedCodes: [String] {
+        state.selectorLanguages.filter { state.isSupported($0, by: provider) }
+    }
+
+    /// The user's languages currently routed to this provider.
+    private var activeCodes: [String] {
+        state.selectorLanguages.filter { state.provider(for: $0) == provider }
+    }
+
+    /// Route every supported language of the user to this provider.
+    private func useForMyLanguages() {
+        for code in supportedCodes {
+            state.languageProviders[Languages.named(code).code] = provider
+        }
+    }
 
     var body: some View {
         Form {
@@ -136,15 +156,29 @@ private struct ProviderTab: View {
                     .foregroundStyle(.secondary)
 
                 LabeledContent("Status") {
-                    if isActive {
-                        Label("Active", systemImage: "checkmark.circle.fill")
-                            .foregroundStyle(.green)
-                            .labelStyle(.titleAndIcon)
-                    } else if provider.isImplemented {
-                        Button("Use this provider", action: makeActive)
+                    if !activeCodes.isEmpty {
+                        Label(
+                            activeCodes.count == state.selectorLanguages.count
+                                ? "Active for all your languages"
+                                : "Active for \(activeCodes.map { Languages.named($0).name }.joined(separator: ", "))",
+                            systemImage: "checkmark.circle.fill"
+                        )
+                        .foregroundStyle(.green)
+                        .labelStyle(.titleAndIcon)
+                    } else if supportedCodes.isEmpty {
+                        Text("Supports none of your languages")
+                            .foregroundStyle(.secondary)
                     } else {
-                        Text("Coming soon").foregroundStyle(.secondary)
+                        Button("Use for my languages", action: useForMyLanguages)
                     }
+                }
+                if activeCodes.count < supportedCodes.count {
+                    if !activeCodes.isEmpty {
+                        Button("Use for my languages", action: useForMyLanguages)
+                    }
+                    Text("\"Use for my languages\" routes every language this provider supports to it. Adjust individual languages in General › Provider per language.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
             }
 
@@ -233,14 +267,6 @@ private struct GeneralTab: View {
 
     var body: some View {
         Form {
-            Section("Speech") {
-                Picker("Provider", selection: $state.source) {
-                    ForEach(SpeechSource.allCases) { provider in
-                        Text(provider.displayName).tag(provider)
-                    }
-                }
-            }
-
             Section("Language") {
                 Picker("Language", selection: $state.activeLanguage) {
                     Text("Default language (current keyboard language)").tag(Languages.auto)
@@ -396,6 +422,43 @@ private struct SpendChart: View {
             }
         }
         .padding(.vertical, 2)
+    }
+}
+
+/// Log of recent dictations, each with copy / paste actions — a safety net for
+/// when auto-insert lands in the wrong place.
+private struct HistoryTab: View {
+    @ObservedObject var state: AppState
+
+    var body: some View {
+        Form {
+            if state.history.isEmpty {
+                Section {
+                    Text("Your recent dictations will appear here.")
+                        .foregroundStyle(.secondary)
+                }
+            } else {
+                ForEach(state.history) { entry in
+                    Section {
+                        Text(entry.text)
+                            .textSelection(.enabled)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        HStack {
+                            Text(entry.date, format: .dateTime.month().day().hour().minute())
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            Spacer()
+                            Button("Copy") { state.copyToClipboard(entry.text) }
+                        }
+                    }
+                }
+
+                Section {
+                    Button("Clear history", role: .destructive) { state.clearHistory() }
+                }
+            }
+        }
+        .formStyle(.grouped)
     }
 }
 

@@ -155,8 +155,29 @@ final class AppleSpeechTranscriber: SpeechTranscribing, @unchecked Sendable {
                 cont.resume(returning: immediate)
             } else {
                 withLock { request?.endAudio() } // flush → triggers final result
+                // Safety net: if the recognizer never delivers a final result,
+                // resolve with what we have so the caller isn't stuck holding
+                // this transcriber (and its engine — i.e. the mic) forever.
+                Task { [weak self] in
+                    try? await Task.sleep(nanoseconds: 3_000_000_000)
+                    self?.forceFinish()
+                }
             }
         }
+    }
+
+    /// Resolve a `finish()` whose final recognition callback never arrived.
+    private func forceFinish() {
+        let cont: CheckedContinuation<String, Never>? = withLock {
+            guard let c = finishContinuation else { return nil }
+            finishContinuation = nil
+            task?.cancel()
+            task = nil
+            request = nil
+            foldLatest()
+            return c
+        }
+        cont?.resume(returning: withLock { finalized })
     }
 
     func cancel() {

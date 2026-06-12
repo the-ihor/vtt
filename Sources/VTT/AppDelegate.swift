@@ -146,6 +146,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         toggle.target = self
         toggleItem = toggle
         menu.addItem(
+            withTitle: "Paste Latest Transcription",
+            action: #selector(pasteLatest),
+            keyEquivalent: ""
+        ).target = self
+        menu.addItem(
             withTitle: "Settings…",
             action: #selector(openSettings),
             keyEquivalent: ","
@@ -203,6 +208,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func toggleDictation() {
         state.toggle()
+    }
+
+    @objc private func pasteLatest() {
+        state.pasteLatest()
     }
 
     @objc private func openSettings() {

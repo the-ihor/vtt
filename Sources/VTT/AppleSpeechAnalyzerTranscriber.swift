@@ -116,6 +116,9 @@ final class AppleSpeechAnalyzerTranscriber: SpeechTranscribing, @unchecked Senda
             try await analyzer.start(inputSequence: stream)
         } catch {
             NSLog("VTT: SpeechAnalyzer error: \(error)")
+            // The engine may already be capturing when the analyzer fails —
+            // stop it here or the mic stays held until the next finish/cancel.
+            teardownAudio()
         }
     }
 

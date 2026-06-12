@@ -136,7 +136,7 @@ enum ProviderAccess: Sendable {
 
 /// A streaming transcriber: authorize, start capturing + emitting partials,
 /// then finish to get the final text. Implementations own their audio capture.
-protocol SpeechTranscribing: Sendable {
+protocol SpeechTranscribing: AnyObject, Sendable {
     var source: SpeechSource { get }
 
     /// Prompt for mic + recognition permission. Returns whether granted.

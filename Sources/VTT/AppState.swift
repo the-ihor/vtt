@@ -10,6 +10,13 @@ extension Notification.Name {
     static let vttShowProTab = Notification.Name("vttShowProTab")
 }
 
+/// One completed dictation, kept in the history log.
+struct DictationEntry: Identifiable, Codable, Sendable {
+    let id: UUID
+    let text: String
+    let date: Date
+}
+
 /// Estimated cloud spend on a single day, for the spend trend graph.
 struct DailySpend: Identifiable, Sendable {
     let date: Date
@@ -33,6 +40,12 @@ final class AppState: ObservableObject {
 
     /// Final transcript from the last completed dictation.
     @Published var lastTranscript: String = ""
+
+    /// Recent completed dictations, most recent first, for the history log.
+    @Published private(set) var history: [DictationEntry] = []
+
+    /// How many past dictations to keep.
+    private static let historyLimit = 50
 
     /// Smoothed 0...1 mic level driving the waveform while recording.
     @Published private(set) var level: Float = 0
@@ -252,6 +265,7 @@ final class AppState: ObservableObject {
         dailyCloudSeconds = Self.loadDailyCloud()
         languageProviders = Self.loadLanguageProviders()
         selectedModels = Self.loadSelectedModels()
+        history = Self.loadHistory()
         let daily = Self.loadDailyUsage()
         usageDay = daily.day
         secondsUsedToday = daily.seconds
@@ -289,6 +303,56 @@ final class AppState: ObservableObject {
         guard let data = UserDefaults.standard.data(forKey: "selectedModels"),
               let decoded = try? JSONDecoder().decode([String: String].self, from: data)
         else { return [:] }
+        return decoded
+    }
+
+    // MARK: - Dictation history
+
+    private func addHistory(_ text: String) {
+        history.insert(DictationEntry(id: UUID(), text: text, date: Date()), at: 0)
+        if history.count > Self.historyLimit { history.removeLast(history.count - Self.historyLimit) }
+        persistHistory()
+    }
+
+    func clearHistory() {
+        history = []
+        persistHistory()
+    }
+
+    /// Copy text to the clipboard.
+    func copyToClipboard(_ text: String) {
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(text, forType: .string)
+    }
+
+    /// Put text on the clipboard and paste it into the focused app (needs
+    /// Accessibility). Used by history rows and the menu-bar action.
+    func paste(_ text: String) {
+        guard !text.isEmpty else { return }
+        copyToClipboard(text)
+        permissions.refresh()
+        guard permissions.accessibilityTrusted else {
+            NSLog("VTT: paste requested but Accessibility not granted (text is on the clipboard)")
+            return
+        }
+        // Let the menu/Settings window close and focus return to the target app.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { TextInserter.paste() }
+    }
+
+    /// Paste the most recent transcription into the focused app.
+    func pasteLatest() {
+        paste(history.first?.text ?? lastTranscript)
+    }
+
+    private func persistHistory() {
+        guard let data = try? JSONEncoder().encode(history) else { return }
+        UserDefaults.standard.set(data, forKey: "dictationHistory")
+    }
+
+    private static func loadHistory() -> [DictationEntry] {
+        guard let data = UserDefaults.standard.data(forKey: "dictationHistory"),
+              let decoded = try? JSONDecoder().decode([DictationEntry].self, from: data)
+        else { return [] }
         return decoded
     }
 
@@ -531,21 +595,15 @@ final class AppState: ObservableObject {
     }
 
     private func persistDailyUsage() {
-        UserDefaults.standard.set(usageDay, forKey: "dailyUsageDay")
-        UserDefaults.standard.set(secondsUsedToday, forKey: "dailyUsageSeconds")
-        UserDefaults.standard.set(begsUsedToday, forKey: "dailyBegs")
+        // Tamper-resistant store (Keychain + signed file), not plain UserDefaults,
+        // so the free-tier cap can't be reset with a one-line `defaults delete`.
+        UsageVault.save(day: usageDay, seconds: secondsUsedToday, begs: begsUsedToday)
     }
 
     /// Load today's usage, or zero if the stored counters are from a past day.
+    /// Backed by `UsageVault`, which also handles tampering and clock roll-back.
     private static func loadDailyUsage() -> (day: Date, seconds: Double, begs: Int) {
-        let today = Calendar.current.startOfDay(for: Date())
-        if let storedDay = UserDefaults.standard.object(forKey: "dailyUsageDay") as? Date,
-           Calendar.current.isDate(storedDay, inSameDayAs: today) {
-            return (today,
-                    UserDefaults.standard.double(forKey: "dailyUsageSeconds"),
-                    UserDefaults.standard.integer(forKey: "dailyBegs"))
-        }
-        return (today, 0, 0)
+        UsageVault.loadToday(failClosedSeconds: freeSecondsPerDay, failClosedBegs: begsPerDay)
     }
 
     private func persistUsage() {
@@ -623,9 +681,7 @@ final class AppState: ObservableObject {
             let granted = await transcriber.requestAuthorization()
             guard granted else {
                 NSLog("VTT: speech/mic permission not granted")
-                SystemAudio.restore()
-                preparing = false
-                mode = .idle
+                abortStart(transcriber)
                 return
             }
             do {
@@ -639,11 +695,20 @@ final class AppState: ObservableObject {
                 )
             } catch {
                 NSLog("VTT: failed to start transcription: \(error)")
-                SystemAudio.restore()
-                preparing = false
-                mode = .idle
+                abortStart(transcriber)
             }
         }
+    }
+
+    /// Tear down a backend that failed to start and drop our reference so its
+    /// audio engine deallocates and the microphone is released.
+    private func abortStart(_ failed: SpeechTranscribing) {
+        failed.cancel()
+        SystemAudio.restore()
+        guard transcriber === failed else { return }
+        transcriber = nil
+        preparing = false
+        mode = .idle
     }
 
     /// Abort the in-progress recording without producing or inserting text.
@@ -683,6 +748,12 @@ final class AppState: ObservableObject {
         let usedSource = recordingSource
         recordingStart = nil
 
+        // Hand the backend off to the finish task and clear the property now:
+        // a recording started while this one is still transcribing would
+        // otherwise be orphaned below — left running and holding the mic.
+        let transcriber = self.transcriber
+        self.transcriber = nil
+
         Task { @MainActor in
             guard let transcriber else { mode = .idle; return }
             let text = await transcriber.finish()
@@ -695,6 +766,7 @@ final class AppState: ObservableObject {
                 recordDictation(Date().timeIntervalSince(start), for: usedSource)
             }
             if !text.isEmpty {
+                addHistory(text)
                 NSPasteboard.general.clearContents()
                 NSPasteboard.general.setString(text, forType: .string)
                 if autoInsert {
@@ -706,10 +778,9 @@ final class AppState: ObservableObject {
                     }
                 }
             }
-            // Release the backend so its AVAudioEngine deallocates and the mic
-            // indicator turns off while idle.
-            self.transcriber = nil
-            mode = .idle
+            // A new recording may have started while this one was finishing —
+            // only return to idle if nothing else owns the state.
+            if mode == .transcribing { mode = .idle }
         }
     }
 }

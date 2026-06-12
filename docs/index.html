@@ -118,6 +118,8 @@
     .btn.solid:hover, .btn.dl.recommended:hover { filter:brightness(1.06); background:var(--accent); color:var(--accent-ink); }
     .btn.appstore { background:var(--ink); color:var(--paper); border-color:var(--ink); }
     .btn.appstore:hover { opacity:.88; background:var(--ink); color:var(--paper); }
+    /* Affiliate-referred visits: direct download only (see head script). */
+    .aff-visit .btn.appstore { display:none !important; }
     .btn .sub { display:flex; flex-direction:column; line-height:1.05; align-items:flex-start; }
     .btn .sub small { font-size:9px; font-weight:400; opacity:.75; letter-spacing:.02em; }
     .btn .sub b { font-size:13px; font-weight:700; }
@@ -262,7 +264,23 @@
   </style>
   <!-- Lemon Squeezy affiliate tracking: keeps ?aff attribution from this page
        through to checkout on lsq-store.the-ihor.com. -->
-  <script>window.lemonSqueezyAffiliateConfig = { store: "the-ihor" };</script>
+  <script>
+    window.lemonSqueezyAffiliateConfig = { store: "the-ihor" };
+    // Affiliate-referred visitors are steered to the direct download — the
+    // channel where their referrer is actually paid. Hide the App Store path
+    // for 30 days, matching the affiliate attribution window.
+    (function () {
+      var KEY = "vtt-aff-until";
+      try {
+        if (new URLSearchParams(location.search).has("aff")) {
+          localStorage.setItem(KEY, String(Date.now() + 30 * 864e5));
+        }
+        if (Number(localStorage.getItem(KEY) || 0) > Date.now()) {
+          document.documentElement.classList.add("aff-visit");
+        }
+      } catch (e) {}
+    })();
+  </script>
   <script src="https://lmsqueezy.com/affiliate.js" defer></script>
 </head>
 

@@ -323,8 +323,7 @@
           <p class="manifesto reveal" style="--d:.3s">Dictation so native you&rsquo;d swear Apple shipped it. <b>Private on-device transcription</b>, the best cloud engines when you want them, and a model picked per language.</p>
           <div class="actions reveal" style="--d:.38s">
             <div class="cta-row">
-              <a class="btn dl" data-arch="arm64" href="https://github.com/the-ihor/vtt/releases/latest/download/VTT.dmg">Apple&nbsp;Silicon <span class="badge" hidden>Yours</span></a>
-              <a class="btn dl" data-arch="x64" href="https://github.com/the-ihor/vtt/releases/latest/download/VTT.dmg">Intel <span class="badge" hidden>Yours</span></a>
+              <a class="btn dl recommended" href="https://github.com/the-ihor/vtt/releases/latest/download/VTT.dmg">Download for Mac</a>
               <a class="btn appstore" href="#" aria-label="Mac App Store (coming soon)">
                 <span aria-hidden="true" style="font-size:16px"></span>
                 <span class="sub"><small>Coming soon</small><b>App&nbsp;Store</b></span>
@@ -562,8 +561,7 @@
         <span class="label reveal">(Download — free)</span>
         <h2 class="get-h display reveal" style="--d:.06s; margin-top:18px">Get <span class="ac">VTT.</span></h2>
         <div class="cta-row reveal" style="--d:.14s">
-          <a class="btn dl" data-arch="arm64" href="https://github.com/the-ihor/vtt/releases/latest/download/VTT.dmg">Download · Apple&nbsp;Silicon <span class="badge" hidden>Recommended</span></a>
-          <a class="btn dl" data-arch="x64" href="https://github.com/the-ihor/vtt/releases/latest/download/VTT.dmg">Download · Intel <span class="badge" hidden>Recommended</span></a>
+          <a class="btn dl recommended" href="https://github.com/the-ihor/vtt/releases/latest/download/VTT.dmg">Download for Mac</a>
           <a class="btn appstore" href="#" aria-label="Mac App Store (coming soon)">
             <span aria-hidden="true" style="font-size:16px"></span>
             <span class="sub"><small>Coming soon</small><b>App&nbsp;Store</b></span>
@@ -596,41 +594,11 @@
   <script>
   (function(){
     function isMac(){ return /Mac/i.test((navigator.platform||'') + ' ' + (navigator.userAgent||'')); }
-    function archFromWebGL(){
-      try {
-        var gl = document.createElement('canvas').getContext('webgl')
-              || document.createElement('canvas').getContext('experimental-webgl');
-        if (!gl) return null;
-        var ext = gl.getExtension('WEBGL_debug_renderer_info');
-        var r = (ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : '').toLowerCase();
-        if (r.indexOf('apple') !== -1) return 'arm64';
-        if (/intel|amd|radeon/.test(r)) return 'x64';
-      } catch (e) {}
-      return null;
-    }
-    function recommend(arch){
-      if (!arch) return;
-      document.querySelectorAll('.btn.dl').forEach(function(btn){
-        var match = btn.getAttribute('data-arch') === arch;
-        btn.classList.toggle('recommended', match);
-        var badge = btn.querySelector('.badge');
-        if (badge) badge.hidden = !match;
-      });
-      document.querySelectorAll('.dl-hint').forEach(function(h){
-        h.textContent = arch === 'arm64'
-          ? 'Looks like an Apple Silicon Mac — that build is recommended.'
-          : 'Looks like an Intel Mac — that build is recommended.';
-      });
-    }
+    // One universal dmg serves both architectures.
     if (isMac()) {
-      recommend(archFromWebGL());
-      if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
-        navigator.userAgentData.getHighEntropyValues(['architecture']).then(function(v){
-          if (!v) return;
-          if (v.architecture === 'arm') recommend('arm64');
-          else if (v.architecture === 'x86') recommend('x64');
-        }).catch(function(){});
-      }
+      document.querySelectorAll('.dl-hint').forEach(function(h){
+        h.textContent = 'Universal app — runs natively on Apple Silicon and Intel.';
+      });
     }
 
     var nav = document.getElementById('nav');

@@ -21,8 +21,10 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-APP="$ROOT/build/VTT.app"
-PKG="$ROOT/build/VTT.pkg"
+# Separate output dir so the dev build (build/VTT.app, signed with the
+# development cert + its TCC grants) never gets clobbered by the MAS build.
+APP="$ROOT/build/appstore/VTT.app"
+PKG="$ROOT/build/appstore/VTT.pkg"
 
 : "${TEAM_ID:?Set TEAM_ID to your Apple Developer Team ID (e.g. TEAM_ID=AB12CD34EF)}"
 : "${PROFILE:?Set PROFILE to the path of the Mac App Store .provisionprofile}"

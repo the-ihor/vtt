@@ -201,12 +201,25 @@ final class AppState: ObservableObject {
     /// VTT Pro subscription / entitlement. Drives whether the daily cap applies.
     let store = SubscriptionStore()
 
+    #if DIRECT_DISTRIBUTION
+    /// Website license entitlement — the direct build's replacement for
+    /// StoreKit, which only works in App Store distribution.
+    let license = LicenseStore()
+    private var licenseObserver: AnyCancellable?
+    #endif
+
     /// Mirror the subscription store's changes so views observing only AppState
     /// (and `isPro` reads) stay in sync when the entitlement flips.
     private var storeObserver: AnyCancellable?
 
     /// Whether the user has unlimited dictation.
-    var isPro: Bool { store.isPro }
+    var isPro: Bool {
+        #if DIRECT_DISTRIBUTION
+        store.isPro || license.isPro
+        #else
+        store.isPro
+        #endif
+    }
 
     /// Seconds of free dictation left today (0 once the cap is hit).
     var remainingFreeSeconds: Double { max(0, Self.freeSecondsPerDay - secondsUsedToday) }
@@ -290,6 +303,11 @@ final class AppState: ObservableObject {
         storeObserver = store.objectWillChange.sink { [weak self] _ in
             self?.objectWillChange.send()
         }
+        #if DIRECT_DISTRIBUTION
+        licenseObserver = license.objectWillChange.sink { [weak self] _ in
+            self?.objectWillChange.send()
+        }
+        #endif
 
         Task { @MainActor in await refreshAnalyzerModels() }
         Task { @MainActor in await modelCatalog.refresh() }

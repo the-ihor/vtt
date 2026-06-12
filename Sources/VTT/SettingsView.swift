@@ -100,7 +100,11 @@ struct SettingsView: View {
         case .history:
             HistoryTab(state: state)
         case .pro:
+            #if DIRECT_DISTRIBUTION
+            DirectProTab(state: state, license: state.license)
+            #else
             ProTab(state: state, store: state.store)
+            #endif
         }
     }
 }
@@ -554,6 +558,98 @@ private struct ProTab: View {
         }
     }
 }
+
+#if DIRECT_DISTRIBUTION
+/// The subscription tab for the direct-download build: StoreKit doesn't work
+/// outside the App Store, so the plan is bought on the website (Lemon Squeezy)
+/// and unlocked here with the license key from the purchase email.
+private struct DirectProTab: View {
+    @ObservedObject var state: AppState
+    @ObservedObject var license: LicenseStore
+    @State private var keyInput = ""
+
+    var body: some View {
+        Form {
+            if license.isPro {
+                Section {
+                    Label("\(SubscriptionStore.planName) is active", systemImage: "checkmark.seal.fill")
+                        .foregroundStyle(.green)
+                    if let masked = license.maskedKey {
+                        LabeledContent("License", value: masked)
+                            .font(.caption)
+                    }
+                    Text("No daily limit on speech-to-text, on every engine. Thanks for supporting VTT.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Section {
+                    Link("Manage billing", destination: LicenseStore.manageURL)
+                    Button("Deactivate on this Mac") { Task { await license.deactivate() } }
+                        .disabled(license.working)
+                    Text("Deactivating frees this Mac's activation slot — the key keeps working elsewhere.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                RoadmapNote()
+            } else {
+                Section(SubscriptionStore.planName) {
+                    Text("Dictate without limits")
+                        .font(.title3).bold()
+                    Text("This plan unlocks **speech-to-text** — it removes the daily free limit so you can dictate as much as you like, on every engine.")
+                        .foregroundStyle(.secondary)
+                }
+
+                Section("Today's free usage") {
+                    DailyUsageBar(state: state)
+                    Text("Out of dictation for today? When you trigger dictation you can beg for one more — \(state.begsRemaining) of \(AppState.begsPerDay) left today.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Section {
+                    Link(destination: LicenseStore.buyURL) {
+                        Text("Get a license — $9.99/month")
+                    }
+                    .buttonStyle(.borderedProminent)
+                    Text("Checkout opens in your browser. The license key arrives by email — paste it below.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Section("Already have a key?") {
+                    TextField("License key", text: $keyInput)
+                        .textFieldStyle(.roundedBorder)
+                        .autocorrectionDisabled()
+                    HStack {
+                        if license.working { ProgressView().controlSize(.small) }
+                        Spacer()
+                        Button("Activate") { Task { await license.activate(keyInput) } }
+                            .disabled(license.working || keyInput.trimmingCharacters(in: .whitespaces).isEmpty)
+                    }
+                }
+
+                if let error = license.lastError {
+                    Section {
+                        Text(error)
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                    }
+                }
+
+                RoadmapNote()
+
+                Section {
+                    Text("Auto-renewing subscription billed by Lemon Squeezy, our merchant of record. Cancel anytime from the billing portal — the link is in your purchase email.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .formStyle(.grouped)
+        .task { await license.revalidate() }
+    }
+}
+#endif
 
 /// Progress bar of today's free-tier usage as a percentage — deliberately
 /// metric-free (no minutes/length/word counts), so users can track how much is

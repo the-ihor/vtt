@@ -23,7 +23,7 @@ final class SubscriptionStore: ObservableObject {
     /// App Store Connect product identifier for the $9.99/mo dictation plan.
     /// Feature-scoped (`.dictation.`) so future modules get their own IDs.
     /// Must match the product configured in App Store Connect.
-    static let monthlyProductID = "com.mgorunuch.vtt.dictation.monthly"
+    static let monthlyProductID = "com.theihor.vtt.dictation.monthly"
 
     /// The loaded monthly subscription product, once fetched from the App Store.
     @Published private(set) var monthly: Product?

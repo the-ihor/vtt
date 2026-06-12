@@ -151,7 +151,7 @@ enum UsageVault {
 
     // MARK: - Keychain backend (survives reinstall, not visible to `defaults`)
 
-    private static let kcService = "com.mgorunuch.vtt.s"
+    private static let kcService = "com.the-ihor.vtt.s"
     private static let kcAccount = "d"
 
     private static func keychainRead() -> String? {

@@ -4,7 +4,7 @@ import Security
 /// Minimal Keychain wrapper for storing API keys. Items are scoped to a single
 /// service; each provider uses its own account name.
 enum Keychain {
-    private static let service = "com.mgorunuch.vtt.apikeys"
+    private static let service = "com.the-ihor.vtt.apikeys"
 
     static func get(_ account: String) -> String? {
         let query: [String: Any] = [

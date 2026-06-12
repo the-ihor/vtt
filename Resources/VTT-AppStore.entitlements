@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<!-- Mac App Store build. @TEAM_ID@ is substituted by scripts/make-appstore.sh;
+     don't sign with this file directly. The sandbox is mandatory on the App
+     Store; Accessibility (for the ⌘V paste) is granted manually by the user in
+     System Settings, which Apple permits for sandboxed apps. -->
+<dict>
+	<key>com.apple.security.app-sandbox</key>
+	<true/>
+	<key>com.apple.security.device.audio-input</key>
+	<true/>
+	<!-- Cloud transcription providers (OpenAI, Deepgram, ElevenLabs). -->
+	<key>com.apple.security.network.client</key>
+	<true/>
+	<!-- Required for App Store submission: must match the provisioning profile. -->
+	<key>com.apple.application-identifier</key>
+	<string>@TEAM_ID@.com.the-ihor.vtt</string>
+	<key>com.apple.developer.team-identifier</key>
+	<string>@TEAM_ID@</string>
+</dict>
+</plist>

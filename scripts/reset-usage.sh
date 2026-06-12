@@ -12,7 +12,7 @@ killall VTT 2>/dev/null && echo "› VTT quit" || echo "› VTT not running"
 sleep 1
 
 # 1) Keychain copy (service/account match UsageVault).
-if security delete-generic-password -s "com.mgorunuch.vtt.s" -a "d" >/dev/null 2>&1; then
+if security delete-generic-password -s "com.the-ihor.vtt.s" -a "d" >/dev/null 2>&1; then
   echo "  reset: keychain blob"
 else
   echo "  absent: keychain blob"
@@ -21,13 +21,13 @@ fi
 # 2) Signed file copy (non-sandbox and sandbox paths).
 for f \
   in "$HOME/Library/Application Support/.vtt-dcache" \
-     "$HOME/Library/Containers/com.mgorunuch.vtt/Data/Library/Application Support/.vtt-dcache"; do
+     "$HOME/Library/Containers/com.the-ihor.vtt/Data/Library/Application Support/.vtt-dcache"; do
   if [ -f "$f" ]; then rm -f "$f" && echo "  reset: $f"; fi
 done
 
 # 3) Legacy UserDefaults keys (pre-hardening builds).
 for k in dailyUsageSeconds dailyUsageDay dailyBegs; do
-  defaults delete com.mgorunuch.vtt "$k" >/dev/null 2>&1 && echo "  reset (legacy): $k" || true
+  defaults delete com.the-ihor.vtt "$k" >/dev/null 2>&1 && echo "  reset (legacy): $k" || true
 done
 
 echo "✓ Usage reset — daily quota is full again."

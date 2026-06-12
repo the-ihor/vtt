@@ -7,7 +7,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>VTT</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.mgorunuch.vtt</string>
+	<string>com.the-ihor.vtt</string>
 	<key>CFBundleExecutable</key>
 	<string>VTT</string>
 	<key>CFBundlePackageType</key>
@@ -17,11 +17,19 @@
 	<key>CFBundleIconName</key>
 	<string>AppIcon</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.1.0</string>
+	<string>1.0</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>3</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>14.0</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.productivity</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>© 2026 Ihor Herasymovych</string>
+	<!-- Only standard HTTPS (exempt) encryption is used — answers the App Store
+	     export-compliance question up front so every upload skips it. -->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<!-- Accessory app: no Dock icon, no app menu — the floating bar is the UI. -->
 	<key>LSUIElement</key>
 	<true/>

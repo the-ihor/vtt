@@ -32,7 +32,7 @@
               "locale" : "en_US"
             }
           ],
-          "productID" : "com.mgorunuch.vtt.dictation.monthly",
+          "productID" : "com.theihor.vtt.dictation.monthly",
           "recurringSubscriptionPeriod" : "P1M",
           "referenceName" : "Unlimited Dictation Monthly",
           "subscriptionGroupID" : "20000001",

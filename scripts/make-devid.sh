@@ -76,14 +76,14 @@ tell application "Finder"
     set current view of container window to icon view
     set toolbar visible of container window to false
     set statusbar visible of container window to false
-    set the bounds of container window to {200, 120, 860, 520}
+    set the bounds of container window to {200, 120, 860, 508}
     set vo to the icon view options of container window
     set arrangement of vo to not arranged
     set icon size of vo to 128
     set text size of vo to 13
     set background picture of vo to POSIX file "/Volumes/VTT/.background/background.tiff"
-    set position of item "VTT.app" of container window to {165, 200}
-    set position of item "Applications" of container window to {495, 200}
+    set position of item "VTT.app" of container window to {165, 170}
+    set position of item "Applications" of container window to {495, 170}
     update without registering applications
     delay 1
     close
@@ -106,5 +106,20 @@ xcrun notarytool submit "$DMG" \
 echo "› Stapling…"
 xcrun stapler staple "$DMG"
 
+# Publish the update feed the direct build's UpdateChecker polls. Goes live
+# when docs/ is committed and pushed (Cloudflare Pages).
+VERSION="$(plutil -extract CFBundleShortVersionString raw "$ROOT/Resources/Info.plist")"
+BUILD="$(plutil -extract CFBundleVersion raw "$ROOT/Resources/Info.plist")"
+cat > "$ROOT/docs/version.json" <<EOF
+{
+  "version": "$VERSION",
+  "build": $BUILD,
+  "dmg": "https://github.com/the-ihor/vtt/releases/latest/download/VTT.dmg",
+  "notes": ""
+}
+EOF
+
 echo "✓ Notarized dmg ready: $DMG"
+echo "  1. Upload:  gh release upload v$VERSION \"$DMG\" --clobber  (or create the release)"
+echo "  2. Publish feed:  commit & push docs/version.json (build $BUILD)"
 echo "  Verify with: spctl -a -t open --context context:primary-signature -v \"$DMG\""

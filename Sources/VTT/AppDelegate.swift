@@ -15,6 +15,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var onboardingWindow: NSWindow?
     private var onboardingCloseObserver: NSObjectProtocol?
     private var cancellables = Set<AnyCancellable>()
+    #if DIRECT_DISTRIBUTION
+    private let updateChecker = UpdateChecker()
+    #endif
 
     private static let onboardingDoneKey = "hasCompletedOnboarding"
 
@@ -27,6 +30,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         observeMode()
         observeFreeLimit()
         showOnboardingIfNeeded()
+        #if DIRECT_DISTRIBUTION
+        updateChecker.start()
+        #endif
     }
 
     // MARK: - Onboarding
@@ -237,6 +243,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             action: #selector(openSettings),
             keyEquivalent: ","
         ).target = self
+        #if DIRECT_DISTRIBUTION
+        menu.addItem(
+            withTitle: "Check for Updates…",
+            action: #selector(checkForUpdates),
+            keyEquivalent: ""
+        ).target = self
+        #endif
         menu.addItem(.separator())
         menu.addItem(
             withTitle: "Quit VTT",
@@ -295,6 +308,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     @objc private func pasteLatest() {
         state.pasteLatest()
     }
+
+    #if DIRECT_DISTRIBUTION
+    @objc private func checkForUpdates() {
+        Task { await updateChecker.check(interactive: true) }
+    }
+    #endif
 
     @objc private func openSettings() {
         if settingsWindow == nil {

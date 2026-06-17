@@ -40,6 +40,9 @@ final class LicenseStore: ObservableObject {
     @Published var lastError: String?
     /// Masked token for display, e.g. "tok_…A1B2".
     @Published private(set) var maskedKey: String?
+    /// Live price/interval from Stripe (e.g. "€9.99/month"). Falls back to this
+    /// last-known string when offline, then refreshes via `refreshPrice()`.
+    @Published private(set) var priceText = "€9.99/month"
 
     init() {
         if let token = Keychain.get(Self.tokenAccount), !token.isEmpty {
@@ -139,6 +142,17 @@ final class LicenseStore: ObservableObject {
         }
     }
 
+    /// Fetch the current price from Stripe so the paywall shows the real
+    /// amount/currency. Best-effort: failures keep the last-known `priceText`.
+    func refreshPrice() async {
+        do {
+            let response: PriceResponse = try await post("price", body: EmptyBody())
+            priceText = Self.formatPrice(response)
+        } catch {
+            // Offline / transient — keep the existing fallback text.
+        }
+    }
+
     /// Quiet periodic check. Network failures keep the grace window running;
     /// only an explicit inactive verdict revokes Pro.
     func revalidate() async {
@@ -218,6 +232,19 @@ final class LicenseStore: ObservableObject {
             case checkoutSessionID = "checkout_session_id"
             case instanceName = "instance_name"
             case instanceID = "instance_id"
+        }
+    }
+
+    private struct EmptyBody: Encodable {}
+
+    private struct PriceResponse: Decodable {
+        let unitAmount: Int
+        let currency: String
+        let interval: String?
+        enum CodingKeys: String, CodingKey {
+            case unitAmount = "unit_amount"
+            case currency
+            case interval
         }
     }
 
@@ -331,6 +358,14 @@ final class LicenseStore: ObservableObject {
             return session
         }
         return trimmed.hasPrefix("cs_") ? trimmed : nil
+    }
+
+    /// Format Stripe's minor-unit amount + ISO currency into a localized string,
+    /// e.g. (999, "eur", "month") -> "€9.99/month".
+    private static func formatPrice(_ p: PriceResponse) -> String {
+        let amount = Decimal(p.unitAmount) / 100
+        let money = amount.formatted(.currency(code: p.currency.uppercased()))
+        return "\(money)/\(p.interval ?? "month")"
     }
 
     private static func mask(_ token: String) -> String {

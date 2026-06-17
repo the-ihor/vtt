@@ -17,6 +17,8 @@ export async function onRequest(context) {
     switch (path) {
       case "checkout":
         return await checkout(context);
+      case "price":
+        return await price(context);
       case "activate":
         return await activate(context);
       case "recover":
@@ -69,6 +71,18 @@ async function checkout({ request, env }) {
 
   if (!session.url) throw new PublicError("Stripe did not return a checkout URL.", 502);
   return json({ url: session.url });
+}
+
+async function price({ env }) {
+  // Let the app show the live price/currency instead of a hardcoded string, so a
+  // price change in Stripe needs no app update. Stripe is the source of truth.
+  const priceID = required(env.STRIPE_PRICE_ID, "STRIPE_PRICE_ID");
+  const p = await stripe(env, `prices/${encodeURIComponent(priceID)}`);
+  return json({
+    unit_amount: p.unit_amount,
+    currency: p.currency,
+    interval: p.recurring?.interval || "month",
+  });
 }
 
 async function activate({ request, env }) {

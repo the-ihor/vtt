@@ -622,7 +622,7 @@ private struct DirectProTab: View {
                 Section {
                     HStack {
                         if license.working { ProgressView().controlSize(.small) }
-                        Button("Subscribe with Stripe — $9.99/month") {
+                        Button("Subscribe with Stripe — \(license.priceText)") {
                             Task { await license.startCheckout() }
                         }
                         .disabled(license.working)
@@ -684,7 +684,10 @@ private struct DirectProTab: View {
             }
         }
         .formStyle(.grouped)
-        .task { await license.revalidate() }
+        .task {
+            await license.refreshPrice()
+            await license.revalidate()
+        }
     }
 }
 #endif

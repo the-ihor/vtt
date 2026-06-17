@@ -35,6 +35,14 @@ final class DeepgramStreamingTranscriber: SpeechTranscribing, @unchecked Sendabl
         self.model = model.isEmpty ? "nova-3" : model
     }
 
+    deinit {
+        // Safety net: if we're released without a clean finish()/cancel(), make
+        // sure neither the mic engine nor the Deepgram WebSocket lingers.
+        teardownAudio()
+        webSocket?.cancel(with: .normalClosure, reason: nil)
+        session.invalidateAndCancel()
+    }
+
     private func withLock<T>(_ body: () -> T) -> T {
         lock.lock(); defer { lock.unlock() }
         return body()
@@ -103,8 +111,12 @@ final class DeepgramStreamingTranscriber: SpeechTranscribing, @unchecked Sendabl
                 }
             }
         }
-        webSocket?.cancel()
+        // A WebSocket-level close handshake (not a bare task cancel) so Deepgram
+        // tears down its /listen session instead of holding it open until its own
+        // idle timeout. Then drop the URLSession so nothing lingers in the pool.
+        webSocket?.cancel(with: .normalClosure, reason: nil)
         webSocket = nil
+        session.finishTasksAndInvalidate()
         return text
     }
 
@@ -115,13 +127,16 @@ final class DeepgramStreamingTranscriber: SpeechTranscribing, @unchecked Sendabl
             finalized = ""
             interim = ""
         }
-        webSocket?.cancel()
+        webSocket?.cancel(with: .normalClosure, reason: nil)
         webSocket = nil
+        session.invalidateAndCancel()
     }
 
     // MARK: - WebSocket
 
     private func receive() {
+        // Don't re-arm the listener once we've closed/torn down.
+        if withLock({ closed }) { return }
         webSocket?.receive { [weak self] result in
             guard let self else { return }
             switch result {

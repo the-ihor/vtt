@@ -1,6 +1,6 @@
 {
-  "version": "1.1",
-  "build": 4,
+  "version": "1.2",
+  "build": 5,
   "dmg": "https://github.com/the-ihor/vtt/releases/latest/download/VTT.dmg",
-  "notes": "Adds Unlimited Dictation subscriptions to the direct-download build (billed via Stripe), with one-click recovery on a new Mac, live pricing, and activation fixes."
+  "notes": "Fixes a Deepgram issue where the live listening session could stay open in the background after you stopped dictating."
 }

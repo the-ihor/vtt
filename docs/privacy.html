@@ -11,7 +11,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Privacy Policy — VTT</title>
-  <meta name="description" content="VTT privacy policy. On-device by default, no account, no tracking. Optional cloud engines run through your own API key.">
+  <meta name="description" content="VTT privacy policy. On-device by default, no app telemetry. Optional cloud engines use your own API key; direct subscriptions use Stripe.">
   <link rel="canonical" href="https://vtt.the-ihor.com/privacy.html">
   <meta name="author" content="Ihor Herasymovych">
   <meta name="robots" content="index,follow">
@@ -20,7 +20,7 @@
   <meta property="og:locale" content="en_US">
   <meta property="og:url" content="https://vtt.the-ihor.com/privacy.html">
   <meta property="og:title" content="Privacy Policy — VTT">
-  <meta property="og:description" content="On-device by default, no account, no tracking. Optional cloud engines run through your own API key.">
+  <meta property="og:description" content="On-device by default, no app telemetry. Optional cloud engines use your own API key; direct subscriptions use Stripe.">
   <meta property="og:image" content="https://vtt.the-ihor.com/assets/og.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Privacy Policy — VTT">
@@ -59,7 +59,7 @@
       <div class="page-head">
         <span class="label">Legal · Privacy</span>
         <h1>Privacy <span class="ac">Policy</span></h1>
-        <p class="meta">Effective <b>June 6, 2026</b> · Last updated <b>June 6, 2026</b></p>
+        <p class="meta">Effective <b>June 6, 2026</b> · Last updated <b>June 16, 2026</b></p>
       </div>
     </div>
 
@@ -67,7 +67,7 @@
       <article class="doc">
         <div class="tldr">
           <span class="label">The short version</span>
-          <p>VTT runs on your Mac. By default it transcribes <strong>on-device</strong>, so your audio never leaves the machine. There is no account, no sign-in, and no analytics or tracking. If you choose a cloud engine, your audio is sent <strong>directly from your Mac to that provider using your own API key</strong> — we never receive, see, or store it.</p>
+          <p>VTT runs on your Mac. By default it transcribes <strong>on-device</strong>, so your audio never leaves the machine. The app has no account, no sign-in, and no app telemetry. If you choose a cloud engine, your audio is sent <strong>directly from your Mac to that provider using your own API key</strong> — we never receive, see, or store it. If you buy the direct-download subscription, billing is handled by Stripe and VTT receives only the subscription identifiers needed to unlock the app.</p>
         </div>
 
         <nav class="toc" aria-label="Sections">
@@ -88,11 +88,12 @@
         <p>This policy applies to the VTT macOS application and the website at <a href="https://vtt.the-ihor.com/">vtt.the-ihor.com</a>.</p>
 
         <h2 id="collect"><span class="n">02</span>Information we collect</h2>
-        <p><strong>We do not collect personal data.</strong> VTT has no user accounts, no sign-in, and sends no analytics or telemetry to us. Specifically:</p>
+        <p><strong>We do not collect audio, transcripts, API keys, or app telemetry.</strong> VTT has no user accounts, no sign-in, and sends no analytics or telemetry from the app to us. Specifically:</p>
         <ul>
           <li><strong>No account.</strong> You do not register or provide an email, name, or any identifier to use VTT.</li>
           <li><strong>No analytics or tracking.</strong> The app does not embed advertising or third-party analytics SDKs and does not profile you.</li>
           <li><strong>No audio or transcripts sent to us.</strong> We operate no servers that receive your voice or text.</li>
+          <li><strong>Limited billing data.</strong> If you subscribe through the direct-download build, Stripe processes checkout and billing. Our entitlement endpoint receives Stripe identifiers such as Checkout Session ID, Customer ID, Subscription ID, subscription status, and billing email only to activate, validate, or manage the subscription. We do not receive or store card numbers.</li>
         </ul>
         <p>Any diagnostics you choose to share with Apple through macOS (e.g. system crash reporting) are handled by Apple under <a href="https://www.apple.com/legal/privacy/" rel="noopener">Apple&rsquo;s Privacy Policy</a>, not by us.</p>
 
@@ -124,17 +125,18 @@
           <li>Requests to a cloud transcription provider you have enabled (using your key).</li>
           <li>Downloading on-device language models you choose to install.</li>
           <li>Checking for app updates, if that option is available and enabled.</li>
+          <li>Starting, activating, validating, or managing a direct-download subscription through our Stripe entitlement endpoint.</li>
         </ul>
         <p>On-device dictation does not require an internet connection.</p>
 
         <h2 id="thirdparty"><span class="n">07</span>Third-party services</h2>
-        <p>Beyond the optional transcription providers above, app downloads may be hosted on GitHub and the website may be served via GitHub Pages; standard web server logs (such as IP address) may be processed by those hosts under their own policies. We do not combine such logs with any other data or use them to identify you.</p>
+        <p>Beyond the optional transcription providers above, app downloads may be hosted on GitHub, the website and entitlement endpoint may be served by Cloudflare Pages/Workers, and direct-download subscriptions are processed by <a href="https://stripe.com/privacy" rel="noopener">Stripe</a>. Standard service logs (such as IP address) may be processed by those providers under their own policies. We do not combine such logs with any other data or use them to identify you.</p>
 
         <h2 id="children"><span class="n">08</span>Children&rsquo;s privacy</h2>
         <p>VTT is a general-purpose productivity tool and is not directed to children under 13 (or the equivalent minimum age in your jurisdiction). We do not knowingly collect personal information from children.</p>
 
         <h2 id="security"><span class="n">09</span>Data security &amp; your control</h2>
-        <p>Because your data stays on your device (or goes directly to a provider you chose), you remain in control of it. You can revoke microphone or accessibility permissions at any time, remove your API keys, delete downloaded models, or uninstall the app to remove its local data. Deleting data held by a cloud provider is done through that provider&rsquo;s own account controls.</p>
+        <p>Because your dictation data stays on your device (or goes directly to a provider you chose), you remain in control of it. You can revoke microphone or accessibility permissions at any time, remove your API keys, delete downloaded models, remove your local subscription token, or uninstall the app to remove its local data. Deleting data held by a cloud or billing provider is done through that provider&rsquo;s own account controls.</p>
 
         <h2 id="changes"><span class="n">10</span>Changes to this policy</h2>
         <p>We may update this policy as the app evolves. Material changes will be reflected by updating the &ldquo;Last updated&rdquo; date above and posting the revised policy at this URL. Continued use of VTT after changes take effect constitutes acceptance of the updated policy.</p>

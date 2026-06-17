@@ -1,0 +1,9 @@
+# Cloudflare Pages configuration for the VTT website and Stripe entitlement API.
+# Secrets are set with `wrangler pages secret put`; do not commit Stripe keys.
+
+name = "vtt"
+pages_build_output_dir = "./docs"
+compatibility_date = "2026-06-16"
+
+[vars]
+PUBLIC_BASE_URL = "https://vtt.the-ihor.com"

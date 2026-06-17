@@ -560,13 +560,14 @@ private struct ProTab: View {
 }
 
 #if DIRECT_DISTRIBUTION
-/// The subscription tab for the direct-download build: StoreKit doesn't work
-/// outside the App Store, so the plan is bought on the website (Lemon Squeezy)
-/// and unlocked here with the license key from the purchase email.
+/// The subscription tab for the direct-download build: StoreKit does not sell
+/// outside the App Store, so checkout is handled by Stripe on the website and
+/// unlocked here with the activation code from the success page.
 private struct DirectProTab: View {
     @ObservedObject var state: AppState
     @ObservedObject var license: LicenseStore
-    @State private var keyInput = ""
+    @State private var activationInput = ""
+    @State private var recoverInput = ""
 
     var body: some View {
         Form {
@@ -575,7 +576,7 @@ private struct DirectProTab: View {
                     Label("\(SubscriptionStore.planName) is active", systemImage: "checkmark.seal.fill")
                         .foregroundStyle(.green)
                     if let masked = license.maskedKey {
-                        LabeledContent("License", value: masked)
+                        LabeledContent("Entitlement", value: masked)
                             .font(.caption)
                     }
                     Text("No daily limit on speech-to-text, on every engine. Thanks for supporting VTT.")
@@ -583,12 +584,24 @@ private struct DirectProTab: View {
                         .foregroundStyle(.secondary)
                 }
                 Section {
-                    Link("Manage billing", destination: LicenseStore.manageURL)
-                    Button("Deactivate on this Mac") { Task { await license.deactivate() } }
-                        .disabled(license.working)
-                    Text("Deactivating frees this Mac's activation slot — the key keeps working elsewhere.")
+                    HStack {
+                        if license.working { ProgressView().controlSize(.small) }
+                        Button("Manage billing") { Task { await license.openBillingPortal() } }
+                            .disabled(license.working)
+                        Spacer()
+                        Button("Remove from this Mac") { Task { await license.deactivate() } }
+                            .disabled(license.working)
+                    }
+                    Text("Removing the entitlement token affects only this Mac. Your Stripe subscription stays active until you cancel it in billing.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
+                }
+                if let error = license.lastError {
+                    Section {
+                        Text(error)
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                    }
                 }
                 RoadmapNote()
             } else {
@@ -607,25 +620,50 @@ private struct DirectProTab: View {
                 }
 
                 Section {
-                    Link(destination: LicenseStore.buyURL) {
-                        Text("Get a license — $9.99/month")
+                    HStack {
+                        if license.working { ProgressView().controlSize(.small) }
+                        Button("Subscribe with Stripe — $9.99/month") {
+                            Task { await license.startCheckout() }
+                        }
+                        .disabled(license.working)
+                        .buttonStyle(.borderedProminent)
                     }
-                    .buttonStyle(.borderedProminent)
-                    Text("Checkout opens in your browser. The license key arrives by email — paste it below.")
+                    Text("Checkout opens in your browser. After payment, copy the activation code from the success page and paste it below.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
 
-                Section("Already have a key?") {
-                    TextField("License key", text: $keyInput)
+                Section("Already subscribed?") {
+                    TextField("Activation code", text: $activationInput)
                         .textFieldStyle(.roundedBorder)
                         .autocorrectionDisabled()
                     HStack {
                         if license.working { ProgressView().controlSize(.small) }
                         Spacer()
-                        Button("Activate") { Task { await license.activate(keyInput) } }
-                            .disabled(license.working || keyInput.trimmingCharacters(in: .whitespaces).isEmpty)
+                        Button("Activate") { Task { await license.activate(activationInput) } }
+                            .disabled(license.working || activationInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     }
+                    Text("You can paste either the activation code or the full Stripe success-page URL.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Section("Reinstalled or on a new Mac?") {
+                    Text("Subscribed before but this Mac shows as unsubscribed? Recover with your Stripe customer ID.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    TextField("Customer ID (cus_…)", text: $recoverInput)
+                        .textFieldStyle(.roundedBorder)
+                        .autocorrectionDisabled()
+                    HStack {
+                        if license.working { ProgressView().controlSize(.small) }
+                        Spacer()
+                        Button("Recover") { Task { await license.recover(recoverInput) } }
+                            .disabled(license.working || recoverInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    }
+                    Text("Don't have your customer ID? Email mgorunuch.igor@gmail.com and we'll look it up from your subscription.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
 
                 if let error = license.lastError {
@@ -639,7 +677,7 @@ private struct DirectProTab: View {
                 RoadmapNote()
 
                 Section {
-                    Text("Auto-renewing subscription billed by Lemon Squeezy, our merchant of record. Cancel anytime from the billing portal — the link is in your purchase email.")
+                    Text("Auto-renewing subscription billed by Stripe. Cancel anytime from the billing portal after activating this Mac.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

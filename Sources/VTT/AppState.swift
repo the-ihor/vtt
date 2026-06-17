@@ -202,8 +202,8 @@ final class AppState: ObservableObject {
     let store = SubscriptionStore()
 
     #if DIRECT_DISTRIBUTION
-    /// Website license entitlement — the direct build's replacement for
-    /// StoreKit, which only works in App Store distribution.
+    /// Website billing entitlement — the direct build's replacement for
+    /// StoreKit checkout, which only works in App Store distribution.
     let license = LicenseStore()
     private var licenseObserver: AnyCancellable?
     #endif

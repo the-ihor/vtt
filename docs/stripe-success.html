@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VTT subscription activated</title>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="legal.css">
+  <style>
+    .activation { margin-top: 18px; padding: 18px; border: 1px solid var(--line); background: #fff; }
+    .code { display: block; width: 100%; box-sizing: border-box; margin-top: 10px; padding: 12px; font: 13px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--ink); border: 1px solid var(--line); border-radius: 6px; background: #f8f8f5; }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 14px; border: 1px solid var(--line); border-radius: 6px; color: var(--ink); background: #fff; text-decoration: none; cursor: pointer; }
+    .btn.primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="wrap">
+      <article>
+        <p class="eyebrow">VTT Unlimited Dictation</p>
+        <h1>Subscription complete</h1>
+        <p>Copy this activation code, open VTT, and paste it in Settings → Subscription.</p>
+
+        <div class="activation">
+          <label for="code">Activation code</label>
+          <input class="code" id="code" readonly value="">
+          <div class="actions">
+            <button class="btn primary" id="copy" type="button">Copy code</button>
+            <a class="btn" href="/">Back to VTT</a>
+          </div>
+          <p id="missing" class="hidden" style="color:var(--faint);font-size:13px">No activation code was found in this page URL. Please return to VTT and start checkout again.</p>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <script>
+    var code = new URLSearchParams(location.search).get("session_id") || "";
+    var input = document.getElementById("code");
+    var missing = document.getElementById("missing");
+    input.value = code;
+    if (!code) missing.classList.remove("hidden");
+    document.getElementById("copy").addEventListener("click", function () {
+      input.select();
+      navigator.clipboard && navigator.clipboard.writeText(code).catch(function () {});
+      document.execCommand("copy");
+    });
+  </script>
+</body>
+</html>

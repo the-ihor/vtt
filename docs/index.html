@@ -116,8 +116,9 @@
     .btn:hover { background:var(--ink); color:var(--paper); transform:translateY(-1px); }
     .btn.solid, .btn.dl.recommended { background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
     .btn.solid:hover, .btn.dl.recommended:hover { filter:brightness(1.06); background:var(--accent); color:var(--accent-ink); }
-    .btn.appstore { background:var(--ink); color:var(--paper); border-color:var(--ink); }
-    .btn.appstore:hover { opacity:.88; background:var(--ink); color:var(--paper); }
+    /* Coming soon: a disabled placeholder, not a live download. */
+    .btn.appstore { background:transparent; color:var(--muted); border-color:var(--line); border-style:dashed; cursor:default; pointer-events:none; }
+    .btn.appstore:hover { opacity:1; background:transparent; color:var(--muted); }
     .btn .sub { display:flex; flex-direction:column; line-height:1.05; align-items:flex-start; }
     .btn .sub small { font-size:9px; font-weight:400; opacity:.75; letter-spacing:.02em; }
     .btn .sub b { font-size:13px; font-weight:700; }
@@ -302,7 +303,7 @@
           <div class="actions reveal" style="--d:.38s">
             <div class="cta-row">
               <a class="btn dl recommended" href="https://github.com/the-ihor/vtt/releases/latest/download/VTT.dmg">Download for Mac</a>
-              <a class="btn appstore" href="#" aria-label="Mac App Store (coming soon)">
+              <a class="btn appstore" role="button" aria-disabled="true" aria-label="Mac App Store (coming soon)">
                 <span aria-hidden="true" style="font-size:16px"></span>
                 <span class="sub"><small>Coming soon</small><b>App&nbsp;Store</b></span>
               </a>
@@ -540,7 +541,7 @@
         <h2 class="get-h display reveal" style="--d:.06s; margin-top:18px">Get <span class="ac">VTT.</span></h2>
         <div class="cta-row reveal" style="--d:.14s">
           <a class="btn dl recommended" href="https://github.com/the-ihor/vtt/releases/latest/download/VTT.dmg">Download for Mac</a>
-          <a class="btn appstore" href="#" aria-label="Mac App Store (coming soon)">
+          <a class="btn appstore" role="button" aria-disabled="true" aria-label="Mac App Store (coming soon)">
             <span aria-hidden="true" style="font-size:16px"></span>
             <span class="sub"><small>Coming soon</small><b>App&nbsp;Store</b></span>
           </a>

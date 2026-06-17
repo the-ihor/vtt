@@ -367,7 +367,8 @@ private struct GeneralTab: View {
             }
 
             Section {
-                LabeledContent("Version", value: "0.1.0")
+                LabeledContent("Version", value:
+                    Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.1")
             }
         }
         .formStyle(.grouped)

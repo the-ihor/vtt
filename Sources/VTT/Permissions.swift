@@ -5,7 +5,10 @@ import Speech
 
 /// Observable wrapper around the system permissions VTT cares about:
 /// microphone (to record), Speech Recognition (Apple providers), and
-/// Accessibility (to paste into the focused app when auto-insert is on).
+/// Accessibility. Accessibility is used only as an assistive-input mechanism:
+/// it lets VTT enter the user's dictated words into the focused app on their
+/// behalf, as an alternative to typing (see `TextInserter`). It is gated behind
+/// the auto-insert toggle and never used for any other purpose.
 /// Refreshed lazily — macOS doesn't push changes.
 @MainActor
 final class Permissions: ObservableObject {

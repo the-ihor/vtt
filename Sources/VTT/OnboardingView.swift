@@ -114,7 +114,7 @@ struct OnboardingView: View {
             OnboardingPermissionRow(
                 icon: "keyboard.badge.ellipsis",
                 title: "Accessibility",
-                detail: "Types the transcript right at your cursor. macOS opens System Settings — enable VTT there, then come back.",
+                detail: "Lets VTT enter your dictated words for you — an alternative to typing, so you can put text into any app by voice. macOS opens System Settings; enable VTT there, then come back.",
                 granted: permissions.accessibilityTrusted,
                 action: permissions.requestAccessibility
             )

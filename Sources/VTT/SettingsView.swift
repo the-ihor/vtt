@@ -327,15 +327,19 @@ private struct GeneralTab: View {
             }
 
             Section("Auto-insert") {
-                Toggle("Paste transcript into the focused app", isOn: $state.autoInsert)
+                Toggle("Type my dictated text into the focused app", isOn: $state.autoInsert)
 
                 PermissionRow(
                     title: "Accessibility",
                     granted: permissions.accessibilityTrusted,
-                    detail: "Required to paste into other apps.",
+                    detail: "Lets VTT enter your dictated words for you — an alternative to typing.",
                     action: permissions.requestAccessibility
                 )
                 .disabled(!state.autoInsert)
+
+                Text("VTT uses Accessibility solely to enter the words you dictate into the focused app on your behalf, so you can input text by voice instead of the keyboard. It is never used for any other purpose. Turn this off to copy transcripts to the clipboard instead.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
 
             Section("Cloud spend (estimated)") {

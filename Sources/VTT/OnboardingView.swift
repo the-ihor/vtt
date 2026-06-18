@@ -315,7 +315,7 @@ private struct OnboardingPermissionRow: View {
                     .foregroundStyle(.green)
                     .labelStyle(.titleAndIcon)
             } else {
-                Button("Grant…", action: action)
+                Button("Continue…", action: action)
             }
         }
         .padding(12)

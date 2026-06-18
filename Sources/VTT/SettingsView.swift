@@ -40,7 +40,7 @@ struct SettingsView: View {
 
                 ForEach(ProviderCategory.allCases, id: \.self) { category in
                     Section(category.title) {
-                        ForEach(SpeechSource.allCases.filter { $0.category == category }) { provider in
+                        ForEach(state.availableSources.filter { $0.category == category }) { provider in
                             Label {
                                 Text(provider.shortName)
                             } icon: {
@@ -287,7 +287,7 @@ private struct GeneralTab: View {
                 ForEach(state.selectorLanguages, id: \.self) { code in
                     Picker(Languages.named(code).name, selection: providerBinding(code)) {
                         Text("Default (\(state.defaultProvider(for: code).shortName))").tag(SpeechSource?.none)
-                        ForEach(SpeechSource.allCases) { provider in
+                        ForEach(state.availableSources) { provider in
                             let ok = state.isSupported(code, by: provider)
                             Text(ok ? provider.shortName : "\(provider.shortName) (not supported)")
                                 .tag(SpeechSource?.some(provider))
@@ -348,7 +348,7 @@ private struct GeneralTab: View {
 
                 SpendChart(data: state.recentDailyCloudCost(days: 30))
 
-                ForEach(SpeechSource.allCases.filter { $0.category == .network }) { provider in
+                ForEach(state.availableSources.filter { $0.category == .network }) { provider in
                     LabeledContent(provider.shortName) {
                         Text(money(state.estimatedCost(for: provider)))
                             .foregroundStyle(.secondary)
@@ -543,15 +543,24 @@ private struct ProTab: View {
                 RoadmapNote()
 
                 Section {
-                    Text("Auto-renewing subscription billed through your Apple ID. Cancel anytime in System Settings › Apple ID › Subscriptions.")
+                    Text("\(SubscriptionStore.planName): a \(store.displayPrice)/month auto-renewing subscription, billed monthly through your Apple ID. Payment is charged at confirmation of purchase and renews automatically each month unless cancelled at least 24 hours before the end of the period. Cancel anytime in System Settings › Apple ID › Subscriptions.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
+                    Link("Terms of Use (EULA)", destination: Self.termsURL)
+                        .font(.caption)
+                    Link("Privacy Policy", destination: Self.privacyURL)
+                        .font(.caption)
                 }
             }
         }
         .formStyle(.grouped)
         .task { await store.refresh() }
     }
+
+    /// Required by App Store Review (Guideline 3.1.2): functional links to the
+    /// Terms of Use (EULA) and Privacy Policy must appear in the purchase flow.
+    static let termsURL = URL(string: "https://vtt.the-ihor.com/terms.html")!
+    static let privacyURL = URL(string: "https://vtt.the-ihor.com/privacy.html")!
 
     private func openManageSubscriptions() {
         if let url = URL(string: "https://apps.apple.com/account/subscriptions") {

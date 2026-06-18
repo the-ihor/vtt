@@ -69,7 +69,10 @@ final class AppState: ObservableObject {
     /// Provider chosen for a language: its explicit override, or the smart
     /// default (see `defaultProvider(for:)`).
     func provider(for code: String) -> SpeechSource {
-        languageProviders[Languages.named(code).code] ?? defaultProvider(for: code)
+        let chosen = languageProviders[Languages.named(code).code] ?? defaultProvider(for: code)
+        // A provider suppressed in this storefront (e.g. OpenAI in China) falls
+        // back to the on-device engine even if it was the stored override.
+        return isRestricted(chosen) ? .appleOnDevice : chosen
     }
 
     /// The automatic provider for a language when the user hasn't overridden it:
@@ -233,6 +236,29 @@ final class AppState: ObservableObject {
     /// System permission state surfaced in Settings.
     let permissions = Permissions()
 
+    /// Storefront-based provider gating (hides OpenAI on the China App Store —
+    /// see `RegionGate`). App Store distribution only; the direct build isn't on
+    /// the App Store and so isn't subject to its regional rules.
+    #if !DIRECT_DISTRIBUTION
+    let region = RegionGate()
+    private var regionObserver: AnyCancellable?
+    #endif
+
+    /// Whether a provider is suppressed in the current storefront.
+    func isRestricted(_ provider: SpeechSource) -> Bool {
+        #if DIRECT_DISTRIBUTION
+        false
+        #else
+        region.restricted.contains(provider)
+        #endif
+    }
+
+    /// Providers offerable in the current storefront — `allCases` minus any the
+    /// region gate suppresses. Drives every provider list in Settings.
+    var availableSources: [SpeechSource] {
+        SpeechSource.allCases.filter { !isRestricted($0) }
+    }
+
     private var recordingStart: Date?
     private var recordingSource: SpeechSource = .appleOnDevice
 
@@ -305,6 +331,12 @@ final class AppState: ObservableObject {
         }
         #if DIRECT_DISTRIBUTION
         licenseObserver = license.objectWillChange.sink { [weak self] _ in
+            self?.objectWillChange.send()
+        }
+        #else
+        // Re-publish when the storefront resolves so provider lists drop OpenAI
+        // the moment we learn we're on a restricted (China) App Store.
+        regionObserver = region.objectWillChange.sink { [weak self] _ in
             self?.objectWillChange.send()
         }
         #endif

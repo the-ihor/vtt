@@ -1,5 +1,10 @@
 import { AbsoluteFill, Img, staticFile } from "remotion";
+import { loadFont as loadNotoSansSC } from "@remotion/google-fonts/NotoSansSC";
 import { C, fontFamily } from "../theme";
+
+// Space Grotesk has no CJK glyphs, so the Simplified-Chinese store copy is set
+// in Noto Sans SC. The UI captures stay English (see note below).
+const { fontFamily: fontFamilySC } = loadNotoSansSC();
 
 // Mac App Store screenshots — 2880×1800 (16:10). Real app captures from
 // docs/assets (copied to public/appstore/), framed in the brand system the
@@ -31,6 +36,18 @@ const UK: SlideCopy[] = [
   { kicker: "Ніщо не губиться", title: ["Кожне диктування — ", { a: "завжди під рукою" }, "."] },
 ];
 
+// Simplified-Chinese store copy. Mainland China App Store (Guideline 5):
+// no OpenAI/ChatGPT references — the captures here are the OpenAI-free `-cn`
+// variants, and no headline mentions a cloud provider by name.
+const ZH: SlideCopy[] = [
+  { kicker: "Mac 语音转文字", title: ["你说话，它打字 — ", { a: "在任何应用里" }, "。"] },
+  { kicker: "本地处理，隐私优先", title: ["音频可以", { a: "留在你的 Mac 上" }, "，完全本地。"] },
+  { kicker: "为口音与多语言而生", title: ["为你说的每一种语言，", { a: "各配一个引擎" }, "。"] },
+  { kicker: "零配置自动切换", title: ["自动跟随你的", { a: "键盘语言" }, "。"] },
+  { kicker: "离线也能用", title: ["语言包下载一次，", { a: "无需联网即可听写" }, "。"] },
+  { kicker: "绝不丢失", title: ["每一次听写，", { a: "复制即得" }, "。"] },
+];
+
 // Screenshot per slide; slide 1 floats the real dictation-bar capture.
 const SRC = [
   "appstore/feature-02.png",
@@ -41,8 +58,12 @@ const SRC = [
   "appstore/feature-09.png",
 ];
 
-const slides = (copy: SlideCopy[]): Slide[] =>
-  copy.map((c, i) => ({ ...c, src: SRC[i], hero: i === 0 }));
+// OpenAI-free captures for the China store (sidebar provider row removed; the
+// per-language OpenAI value swapped). See video/public/appstore/feature-*-cn.png.
+const SRC_CN = SRC.map((s) => s.replace(/\.png$/, "-cn.png"));
+
+const slides = (copy: SlideCopy[], srcs: string[] = SRC): Slide[] =>
+  copy.map((c, i) => ({ ...c, src: srcs[i], hero: i === 0 }));
 
 const Mark: React.FC<{ size?: number }> = ({ size = 56 }) => {
   const s = size / 1024;
@@ -72,11 +93,11 @@ const Mark: React.FC<{ size?: number }> = ({ size = 56 }) => {
   );
 };
 
-const ShotPage: React.FC<{ slide: Slide }> = ({ slide }) => (
+const ShotPage: React.FC<{ slide: Slide; font?: string }> = ({ slide, font = fontFamily }) => (
   <AbsoluteFill
     style={{
       background: C.paper,
-      fontFamily,
+      fontFamily: font,
       color: C.ink,
       padding: "130px 160px 120px",
       flexDirection: "column",
@@ -95,7 +116,7 @@ const ShotPage: React.FC<{ slide: Slide }> = ({ slide }) => (
       }}
     >
       <Mark size={52} />
-      <span style={{ fontWeight: 700, fontSize: 46, letterSpacing: "-0.04em" }}>VTT</span>
+      <span style={{ fontFamily, fontWeight: 700, fontSize: 46, letterSpacing: "-0.04em" }}>VTT</span>
     </div>
 
     <div
@@ -178,10 +199,11 @@ const ShotPage: React.FC<{ slide: Slide }> = ({ slide }) => (
   </AbsoluteFill>
 );
 
-const page = (slide: Slide): React.FC => {
-  const Comp: React.FC = () => <ShotPage slide={slide} />;
+const page = (slide: Slide, font?: string): React.FC => {
+  const Comp: React.FC = () => <ShotPage slide={slide} font={font} />;
   return Comp;
 };
 
-export const APPSTORE_SHOTS = slides(EN).map(page);
-export const APPSTORE_SHOTS_UA = slides(UK).map(page);
+export const APPSTORE_SHOTS = slides(EN).map((s) => page(s));
+export const APPSTORE_SHOTS_UA = slides(UK).map((s) => page(s));
+export const APPSTORE_SHOTS_CN = slides(ZH, SRC_CN).map((s) => page(s, fontFamilySC));

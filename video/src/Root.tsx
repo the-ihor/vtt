@@ -2,7 +2,7 @@ import { Composition, Still } from "remotion";
 import { HeroVideo } from "./HeroVideo";
 import { LogoGif } from "./LogoGif";
 import { SubscriptionArt } from "./SubscriptionArt";
-import { APPSTORE_SHOTS, APPSTORE_SHOTS_UA, SHOT_SIZE } from "./appstore/AppStoreShots";
+import { APPSTORE_SHOTS, APPSTORE_SHOTS_UA, APPSTORE_SHOTS_CN, SHOT_SIZE } from "./appstore/AppStoreShots";
 import { DmgBackground, DMG_SIZE } from "./DmgBackground";
 import { GALLERY, GALLERY_SIZE } from "./gallery/GallerySlides";
 import { FPS, f } from "./theme";
@@ -51,6 +51,15 @@ export const RemotionRoot: React.FC = () => {
         <Still
           key={`asua-${i}`}
           id={`AppStoreUA0${i + 1}`}
+          component={Comp}
+          width={SHOT_SIZE.width}
+          height={SHOT_SIZE.height}
+        />
+      ))}
+      {APPSTORE_SHOTS_CN.map((Comp, i) => (
+        <Still
+          key={`ascn-${i}`}
+          id={`AppStoreCN0${i + 1}`}
           component={Comp}
           width={SHOT_SIZE.width}
           height={SHOT_SIZE.height}

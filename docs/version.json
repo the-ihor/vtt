@@ -1,6 +1,6 @@
 {
-  "version": "1.2",
-  "build": 5,
+  "version": "1.3",
+  "build": 6,
   "dmg": "https://github.com/the-ihor/vtt/releases/latest/download/VTT.dmg",
-  "notes": "Fixes a Deepgram issue where the live listening session could stay open in the background after you stopped dictating."
+  "notes": "Adds the ElevenLabs Scribe v2 model and a custom dictionary that biases recognition toward your names, jargon, and tricky terms — available across every engine, with a per-provider on/off switch. Also adds ElevenLabs controls for audio-event tagging and sampling temperature."
 }

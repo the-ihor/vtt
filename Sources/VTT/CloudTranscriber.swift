@@ -56,6 +56,8 @@ final class CloudTranscriber: SpeechTranscribing, @unchecked Sendable {
 /// Deepgram Nova-3 prerecorded endpoint: raw WAV body, token auth.
 struct DeepgramAPI: CloudSpeechAPI {
     let source: SpeechSource = .deepgram
+    /// Custom-vocabulary terms biased via Nova-3 keyterm prompting.
+    var keyterms: [String] = []
 
     func transcribe(wav: Data, apiKey: String, language: String) async throws -> String {
         var components = URLComponents(string: "https://api.deepgram.com/v1/listen")!
@@ -65,6 +67,8 @@ struct DeepgramAPI: CloudSpeechAPI {
             URLQueryItem(name: "punctuate", value: "true"),
             URLQueryItem(name: "smart_format", value: "true"),
         ]
+        // Nova-3 biases recognition via keyterm prompting (one param per term).
+        components.queryItems! += keyterms.map { URLQueryItem(name: "keyterm", value: $0) }
         var request = URLRequest(url: components.url!)
         request.httpMethod = "POST"
         request.setValue("Token \(apiKey)", forHTTPHeaderField: "Authorization")
@@ -89,12 +93,15 @@ struct DeepgramAPI: CloudSpeechAPI {
 struct OpenAIAPI: CloudSpeechAPI {
     let source: SpeechSource = .openAI
     var model: String = "gpt-4o-transcribe"
+    /// Optional vocabulary/style hint biasing recognition (custom dictionary).
+    var prompt: String = ""
 
     func transcribe(wav: Data, apiKey: String, language: String) async throws -> String {
         var body = MultipartBody()
         body.addField("model", model.isEmpty ? "gpt-4o-transcribe" : model)
         body.addField("response_format", "json")
         body.addField("language", language)
+        if !prompt.isEmpty { body.addField("prompt", prompt) }
         body.addFile("file", filename: "audio.wav", contentType: "audio/wav", data: wav)
 
         var request = URLRequest(url: URL(string: "https://api.openai.com/v1/audio/transcriptions")!)
@@ -113,11 +120,28 @@ struct OpenAIAPI: CloudSpeechAPI {
 struct ElevenLabsAPI: CloudSpeechAPI {
     let source: SpeechSource = .elevenLabs
     var model: String = "scribe_v1"
+    /// Tag non-speech events like (laughter). Off keeps dictation text clean.
+    var tagAudioEvents: Bool = false
+    /// Explicit sampling temperature (0...2); nil leaves it to the API default.
+    var temperature: Double? = nil
+    /// Custom-vocabulary terms. ElevenLabs only honours keyterms on Scribe v2,
+    /// so they're sent only when that model is selected.
+    var keyterms: [String] = []
 
     func transcribe(wav: Data, apiKey: String, language: String) async throws -> String {
+        let modelID = model.isEmpty ? "scribe_v1" : model
         var body = MultipartBody()
-        body.addField("model_id", model.isEmpty ? "scribe_v1" : model)
+        body.addField("model_id", modelID)
         body.addField("language_code", language)
+        body.addField("tag_audio_events", tagAudioEvents ? "true" : "false")
+        if let temperature {
+            body.addField("temperature", String(format: "%.2f", temperature))
+        }
+        // keyterms is an array → repeated form fields (one per term), matching
+        // the official SDK's encoding. Keyterm prompting is Scribe v2 only.
+        if modelID == "scribe_v2" {
+            for term in keyterms { body.addField("keyterms", term) }
+        }
         body.addFile("file", filename: "audio.wav", contentType: "audio/wav", data: wav)
 
         var request = URLRequest(url: URL(string: "https://api.elevenlabs.io/v1/speech-to-text")!)

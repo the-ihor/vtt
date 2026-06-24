@@ -226,6 +226,37 @@ private struct ProviderTab: View {
                 }
             }
 
+            if provider == .elevenLabs {
+                Section("ElevenLabs options") {
+                    Toggle("Tag audio events", isOn: $state.elevenLabsOptions.tagAudioEvents)
+                    Text("Inserts annotations like (laughter) or (applause). Keep off for clean dictation text.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+
+                    Toggle("Set sampling temperature", isOn: $state.elevenLabsOptions.temperatureEnabled)
+                    if state.elevenLabsOptions.temperatureEnabled {
+                        HStack {
+                            Slider(value: $state.elevenLabsOptions.temperature, in: 0...2, step: 0.05)
+                            Text(String(format: "%.2f", state.elevenLabsOptions.temperature))
+                                .font(.caption)
+                                .monospacedDigit()
+                                .foregroundStyle(.secondary)
+                                .frame(width: 40, alignment: .trailing)
+                        }
+                        Text("Higher is more variable, lower more deterministic. Leave off to use ElevenLabs' default.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
+
+            Section("Custom dictionary") {
+                Toggle("Use custom dictionary", isOn: dictionaryBinding)
+                Text(dictionaryNote)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
             Section("Your languages") {
                 ForEach(state.selectorLanguages, id: \.self) { code in
                     LangSupportRow(state: state, code: code, provider: provider)
@@ -253,6 +284,29 @@ private struct ProviderTab: View {
             get: { state.model(for: provider) },
             set: { state.selectedModels[provider.rawValue] = $0 }
         )
+    }
+
+    /// Toggle binding for whether this provider uses the custom dictionary
+    /// (defaulting to on when the user hasn't set it).
+    private var dictionaryBinding: Binding<Bool> {
+        Binding(
+            get: { state.usesDictionary(provider) },
+            set: { state.dictionaryEnabled[provider.rawValue] = $0 }
+        )
+    }
+
+    /// How this provider applies the shared dictionary, shown under the toggle.
+    private var dictionaryNote: String {
+        switch provider {
+        case .elevenLabs:
+            "Sent as keyterms — needs the Scribe v2 model and adds ~20% to ElevenLabs cost. Edit the list in General › Custom dictionary."
+        case .openAI:
+            "Sent as a prompt hint to bias recognition. Edit the list in General › Custom dictionary."
+        case .deepgram:
+            "Sent as Nova-3 keyterm prompting. Edit the list in General › Custom dictionary."
+        case .appleOnDevice, .appleSpeechAnalyzer:
+            "Biases on-device recognition toward your terms. Edit the list in General › Custom dictionary."
+        }
     }
 
     private var speechDetail: String {
@@ -296,6 +350,19 @@ private struct GeneralTab: View {
                     }
                 }
                 Text("Each language defaults to the best on-device Apple engine — the newer Speech when its model is installed, otherwise the legacy one. Override any language here.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            Section("Custom dictionary") {
+                Text("Bias recognition toward names, jargon, and terms it often gets wrong — one per line. Turn it on or off for each provider in that provider's tab.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                TextEditor(text: $state.customDictionaryText)
+                    .font(.body.monospaced())
+                    .frame(minHeight: 110)
+                    .scrollContentBackground(.hidden)
+                Text("\(state.customDictionaryTerms.count) terms. Providers apply this differently: Apple and Deepgram bias on-device/keyterms, OpenAI uses it as a prompt hint, and ElevenLabs needs the Scribe v2 model (extra cost).")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

@@ -16,9 +16,12 @@ final class AppleSpeechAnalyzerTranscriber: SpeechTranscribing, @unchecked Senda
 
     private let preferredLocale: String
     private let audioEngine = AVAudioEngine()
+    /// Custom-vocabulary terms biased into recognition (proper nouns, jargon).
+    private let contextualStrings: [String]
 
-    init(localeIdentifier: String = "en-US") {
+    init(localeIdentifier: String = "en-US", contextualStrings: [String] = []) {
         preferredLocale = localeIdentifier
+        self.contextualStrings = contextualStrings
     }
     private var analyzer: SpeechAnalyzer?
     private var module: SpeechTranscriber?
@@ -110,6 +113,13 @@ final class AppleSpeechAnalyzerTranscriber: SpeechTranscribing, @unchecked Senda
                 await self.consumeResults(module)
             }
             withLock { self.resultsTask = results }
+
+            // Bias recognition toward the user's custom-vocabulary terms.
+            if !contextualStrings.isEmpty {
+                let context = AnalysisContext()
+                context.contextualStrings = [.general: contextualStrings]
+                try await analyzer.setContext(context)
+            }
 
             try startAudio(to: format)
             withLock { self.started = true }

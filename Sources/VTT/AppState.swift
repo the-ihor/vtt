@@ -112,6 +112,45 @@ final class AppState: ObservableObject {
         return available.first?.id ?? ""
     }
 
+    /// Custom-vocabulary terms (one per line) biased into recognition across
+    /// every provider that supports it. Stored as raw text so the editor
+    /// round-trips cleanly (a trailing newline while typing isn't lost).
+    @Published var customDictionaryText: String {
+        didSet { UserDefaults.standard.set(customDictionaryText, forKey: "customDictionaryText") }
+    }
+
+    /// Parsed, de-duplicated dictionary terms (non-empty trimmed lines).
+    var customDictionaryTerms: [String] {
+        var seen = Set<String>()
+        var terms: [String] = []
+        for line in customDictionaryText.split(whereSeparator: \.isNewline) {
+            let term = line.trimmingCharacters(in: .whitespaces)
+            if !term.isEmpty, seen.insert(term).inserted { terms.append(term) }
+        }
+        return terms
+    }
+
+    /// Whether the custom dictionary is applied for a provider (default on, so
+    /// filling the list just works; turn it off per provider here).
+    @Published var dictionaryEnabled: [String: Bool] {
+        didSet { persistDictionaryEnabled() }
+    }
+
+    /// Whether the custom dictionary feeds a provider's recognition.
+    func usesDictionary(_ source: SpeechSource) -> Bool {
+        dictionaryEnabled[source.rawValue] ?? true
+    }
+
+    /// Dictionary terms to hand a provider — empty when disabled or unset.
+    private func dictionaryTerms(for source: SpeechSource) -> [String] {
+        usesDictionary(source) ? customDictionaryTerms : []
+    }
+
+    /// ElevenLabs Scribe tunables (tag audio events, sampling temperature).
+    @Published var elevenLabsOptions: ElevenLabsOptions {
+        didSet { persistElevenLabsOptions() }
+    }
+
     /// Provider handling the in-flight/last recording, for the floating bar.
     @Published private(set) var displayProvider: SpeechSource = .appleOnDevice
 
@@ -272,18 +311,30 @@ final class AppState: ObservableObject {
         let language = resolvedLanguage
         switch provider {
         case .appleSpeechAnalyzer:
+            let terms = dictionaryTerms(for: .appleSpeechAnalyzer)
             if #available(macOS 26, *) {
-                return AppleSpeechAnalyzerTranscriber(localeIdentifier: language.locale)
+                return AppleSpeechAnalyzerTranscriber(localeIdentifier: language.locale, contextualStrings: terms)
             }
-            return AppleSpeechTranscriber(localeIdentifier: language.locale)
+            return AppleSpeechTranscriber(localeIdentifier: language.locale, contextualStrings: terms)
         case .appleOnDevice:
-            return AppleSpeechTranscriber(localeIdentifier: language.locale)
+            return AppleSpeechTranscriber(localeIdentifier: language.locale, contextualStrings: dictionaryTerms(for: .appleOnDevice))
         case .deepgram:
-            return DeepgramStreamingTranscriber(apiKey: apiKey(for: .deepgram), language: language.code, model: model(for: .deepgram))
+            return DeepgramStreamingTranscriber(apiKey: apiKey(for: .deepgram), language: language.code, model: model(for: .deepgram), keyterms: dictionaryTerms(for: .deepgram))
         case .elevenLabs:
-            return CloudTranscriber(api: ElevenLabsAPI(model: model(for: .elevenLabs)), apiKey: apiKey(for: .elevenLabs), language: language.code)
+            let opts = elevenLabsOptions
+            let api = ElevenLabsAPI(
+                model: model(for: .elevenLabs),
+                tagAudioEvents: opts.tagAudioEvents,
+                temperature: opts.temperatureEnabled ? opts.temperature : nil,
+                keyterms: dictionaryTerms(for: .elevenLabs)
+            )
+            return CloudTranscriber(api: api, apiKey: apiKey(for: .elevenLabs), language: language.code)
         case .openAI:
-            return CloudTranscriber(api: OpenAIAPI(model: model(for: .openAI)), apiKey: apiKey(for: .openAI), language: language.code)
+            let api = OpenAIAPI(
+                model: model(for: .openAI),
+                prompt: dictionaryTerms(for: .openAI).joined(separator: ", ")
+            )
+            return CloudTranscriber(api: api, apiKey: apiKey(for: .openAI), language: language.code)
         }
     }
 
@@ -304,6 +355,9 @@ final class AppState: ObservableObject {
         dailyCloudSeconds = Self.loadDailyCloud()
         languageProviders = Self.loadLanguageProviders()
         selectedModels = Self.loadSelectedModels()
+        customDictionaryText = UserDefaults.standard.string(forKey: "customDictionaryText") ?? ""
+        dictionaryEnabled = Self.loadDictionaryEnabled()
+        elevenLabsOptions = Self.loadElevenLabsOptions()
         history = Self.loadHistory()
         let daily = Self.loadDailyUsage()
         usageDay = daily.day
@@ -354,6 +408,30 @@ final class AppState: ObservableObject {
         guard let data = UserDefaults.standard.data(forKey: "selectedModels"),
               let decoded = try? JSONDecoder().decode([String: String].self, from: data)
         else { return [:] }
+        return decoded
+    }
+
+    private func persistDictionaryEnabled() {
+        guard let data = try? JSONEncoder().encode(dictionaryEnabled) else { return }
+        UserDefaults.standard.set(data, forKey: "dictionaryEnabled")
+    }
+
+    private static func loadDictionaryEnabled() -> [String: Bool] {
+        guard let data = UserDefaults.standard.data(forKey: "dictionaryEnabled"),
+              let decoded = try? JSONDecoder().decode([String: Bool].self, from: data)
+        else { return [:] }
+        return decoded
+    }
+
+    private func persistElevenLabsOptions() {
+        guard let data = try? JSONEncoder().encode(elevenLabsOptions) else { return }
+        UserDefaults.standard.set(data, forKey: "elevenLabsOptions")
+    }
+
+    private static func loadElevenLabsOptions() -> ElevenLabsOptions {
+        guard let data = UserDefaults.standard.data(forKey: "elevenLabsOptions"),
+              let decoded = try? JSONDecoder().decode(ElevenLabsOptions.self, from: data)
+        else { return ElevenLabsOptions() }
         return decoded
     }
 

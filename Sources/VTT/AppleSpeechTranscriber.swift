@@ -16,9 +16,12 @@ final class AppleSpeechTranscriber: SpeechTranscribing, @unchecked Sendable {
 
     private let recognizer: SFSpeechRecognizer?
     private let audioEngine = AVAudioEngine()
+    /// Custom-vocabulary terms biased into recognition (proper nouns, jargon).
+    private let contextualStrings: [String]
 
-    init(localeIdentifier: String = "en-US") {
+    init(localeIdentifier: String = "en-US", contextualStrings: [String] = []) {
         recognizer = SFSpeechRecognizer(locale: Locale(identifier: localeIdentifier))
+        self.contextualStrings = contextualStrings
     }
 
     private let lock = NSLock()
@@ -90,6 +93,8 @@ final class AppleSpeechTranscriber: SpeechTranscribing, @unchecked Sendable {
         request.requiresOnDeviceRecognition = recognizer.supportsOnDeviceRecognition
         // Optimize for free-form dictation rather than short command phrases.
         request.taskHint = .dictation
+        // Bias recognition toward the user's custom-vocabulary terms.
+        if !contextualStrings.isEmpty { request.contextualStrings = contextualStrings }
 
         let task = recognizer.recognitionTask(with: request) { [weak self] result, error in
             guard let self else { return }

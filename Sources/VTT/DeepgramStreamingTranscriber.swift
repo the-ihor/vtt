@@ -12,6 +12,7 @@ final class DeepgramStreamingTranscriber: SpeechTranscribing, @unchecked Sendabl
     private let apiKey: String
     private let language: String
     private let model: String
+    private let keyterms: [String]
     private let session = URLSession(configuration: .default)
     private let audioEngine = AVAudioEngine()
     private var webSocket: URLSessionWebSocketTask?
@@ -29,10 +30,11 @@ final class DeepgramStreamingTranscriber: SpeechTranscribing, @unchecked Sendabl
     private var closed = false
     private var finishContinuation: CheckedContinuation<String, Never>?
 
-    init(apiKey: String, language: String, model: String = "nova-3") {
+    init(apiKey: String, language: String, model: String = "nova-3", keyterms: [String] = []) {
         self.apiKey = apiKey
         self.language = language
         self.model = model.isEmpty ? "nova-3" : model
+        self.keyterms = keyterms
     }
 
     deinit {
@@ -79,6 +81,9 @@ final class DeepgramStreamingTranscriber: SpeechTranscribing, @unchecked Sendabl
             URLQueryItem(name: "interim_results", value: "true"),
             URLQueryItem(name: "punctuate", value: "true"),
         ]
+        // Nova-3 biases via keyterm prompting; older models use keyword boosting.
+        let keytermParam = model.hasPrefix("nova-3") ? "keyterm" : "keywords"
+        components.queryItems! += keyterms.map { URLQueryItem(name: keytermParam, value: $0) }
         var request = URLRequest(url: components.url!)
         request.setValue("Token \(apiKey)", forHTTPHeaderField: "Authorization")
 

@@ -127,6 +127,18 @@ enum SpeechSource: String, CaseIterable, Identifiable, Sendable {
     }
 }
 
+/// User-tunable ElevenLabs Scribe parameters, persisted as one blob.
+struct ElevenLabsOptions: Codable, Equatable, Sendable {
+    /// Tag non-speech audio events like (laughter) in the transcript. Off by
+    /// default — for dictation we want clean text, not event annotations.
+    var tagAudioEvents: Bool = false
+    /// When on, send an explicit sampling temperature; otherwise leave it to the
+    /// API's own default.
+    var temperatureEnabled: Bool = false
+    /// Sampling temperature (0...2). Only sent when `temperatureEnabled`.
+    var temperature: Double = 0.0
+}
+
 /// Sidebar grouping for providers.
 enum ProviderCategory: CaseIterable, Sendable {
     case onDevice

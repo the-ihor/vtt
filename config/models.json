@@ -9,6 +9,7 @@
     { "id": "whisper-1", "name": "Whisper" }
   ],
   "elevenLabs": [
-    { "id": "scribe_v1", "name": "Scribe v1" }
+    { "id": "scribe_v1", "name": "Scribe v1" },
+    { "id": "scribe_v2", "name": "Scribe v2" }
   ]
 }

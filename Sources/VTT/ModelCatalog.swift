@@ -72,6 +72,7 @@ final class ModelCatalog: ObservableObject {
         ],
         SpeechSource.elevenLabs.rawValue: [
             ProviderModel(id: "scribe_v1", name: "Scribe v1"),
+            ProviderModel(id: "scribe_v2", name: "Scribe v2"),
         ],
     ]
 }
